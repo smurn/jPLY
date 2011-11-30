@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteOrder;
+import java.nio.channels.Channels;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,11 +34,19 @@ import java.util.zip.GZIPInputStream;
  */
 public class PlyReader {
 
+    /** Types in this file. */
     private List<ElementType> elements;
+    /** Format of the file. */
     private Format format;
-    private InputStream binaryStream;
+    /** Stream to read the data from. {@code null} if the format is ASCII. */
+    private BinaryPlyInputStream binaryStream;
+    /** Original input stream. */
+    private final InputStream inputStream;
+    /** Stream to read the data from. {@code null} if the format is binary. */
     private BufferedReader asciiReader;
+    /** Index of the next element group to return. */
     private int nextElement = 0;
+    /** Reader last returned. */
     private ElementReader currentReader;
 
     /**
@@ -51,13 +61,12 @@ public class PlyReader {
         if (file == null) {
             throw new NullPointerException("file must not be null.");
         }
-        InputStream inputStream;
         if (file.getName().endsWith(".gz")) {
-            inputStream = new GZIPInputStream(new FileInputStream(file));
+            this.inputStream = new GZIPInputStream(new FileInputStream(file));
         } else {
-            inputStream = new FileInputStream(file);
+            this.inputStream = new FileInputStream(file);
         }
-        readHeader(inputStream);
+        readHeader(this.inputStream);
     }
 
     /**
@@ -80,6 +89,7 @@ public class PlyReader {
         if (stream == null) {
             throw new NullPointerException("stream must not be null.");
         }
+        this.inputStream = stream;
         readHeader(stream);
     }
 
@@ -151,18 +161,31 @@ public class PlyReader {
             currentElement = null;
             currentElementProperties = null;
         }
-
         elements = Collections.unmodifiableList(elements);
 
-        if (format == Format.ASCII) {
-            this.asciiReader = new BufferedReader(
-                    new InputStreamReader(stream, Charset.forName("US-ASCII")));
-            this.binaryStream = null;
-        } else {
-            this.asciiReader = null;
-            this.binaryStream = stream;
+        if (format == null) {
+            throw new IOException("Missing format header entry.");
         }
 
+        switch (format) {
+            case ASCII:
+                this.asciiReader = new BufferedReader(new InputStreamReader(
+                        stream, Charset.forName("US-ASCII")));
+                this.binaryStream = null;
+                break;
+            case BINARY_BIG_ENDIAN:
+                this.asciiReader = null;
+                this.binaryStream = new BinaryPlyInputStream(
+                        Channels.newChannel(stream), ByteOrder.BIG_ENDIAN);
+                break;
+            case BINARY_LITTLE_ENDIAN:
+                this.asciiReader = null;
+                this.binaryStream = new BinaryPlyInputStream(
+                        Channels.newChannel(stream), ByteOrder.LITTLE_ENDIAN);
+                break;
+            default:
+                throw new IOException("Unsupported format: " + format);
+        }
     }
 
     /**
@@ -197,6 +220,17 @@ public class PlyReader {
     }
 
     /**
+     * Closes the file.
+     * @throws IOException if closing fails. 
+     */
+    public void close() throws IOException {
+        if (currentReader != null) {
+            currentReader.close();
+        }
+        this.inputStream.close();
+    }
+
+    /**
      * Creates the next element reader.
      * @return next element Reader.
      */
@@ -210,6 +244,11 @@ public class PlyReader {
                     return new AsciiElementReader(
                             elements.get(nextElement),
                             asciiReader);
+                case BINARY_BIG_ENDIAN:
+                case BINARY_LITTLE_ENDIAN:
+                    return new BinaryElementReader(
+                            elements.get(nextElement),
+                            binaryStream);
                 default:
                     throw new UnsupportedOperationException("PLY format "
                             + format + " is currently not supported.");
