@@ -22,14 +22,12 @@ import java.util.Map;
  * <p>Each element has a number of values that describe its properties. The
  * type of an element describes which properties are present in an element.</p>
  */
-public class Element {
+public final class Element implements Cloneable {
 
     /** Values of this element. The first index selects the property. */
     private final double[][] values;
-
     /** Type of this element. */
     private final ElementType type;
-
     /** Maps from property name to the index in {@code values}. */
     private final Map<String, Integer> propertyMap;
 
@@ -39,7 +37,7 @@ public class Element {
      * @param type Element type of the element.
      * @param propertyMap Maps property names to indicies in {@code values}.
      */
-    Element(final double[][] values, final ElementType type, 
+    Element(final double[][] values, final ElementType type,
             final Map<String, Integer> propertyMap) {
         if (values == null || type == null || propertyMap == null) {
             throw new NullPointerException();
@@ -130,10 +128,6 @@ public class Element {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        if (values[index].length == 0) {
-            throw new IndexOutOfBoundsException(
-                    "The property value is a list with zero entries.");
-        }
         int[] v = new int[values[index].length];
         for (int i = 0; i < v.length; i++) {
             v[i] = (int) values[index][i];
@@ -160,10 +154,116 @@ public class Element {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        if (values[index].length == 0) {
-            throw new IndexOutOfBoundsException(
-                    "The property value is a list with zero entries.");
-        }
         return values[index].clone();
+    }
+
+    /**
+     * Sets the value of a property-list.
+     * If the property is not a list, the first element is used.
+     * @param values Values to set for that property.
+     * @throws NullPointerException if {@code propertyName} is {@code null}.
+     * @throws IllegalArgumentException if the element type does not have
+     * a property with the given name.
+     * @throws IndexOutOfBoundsException if the property is not a list property
+     * and the given array does not have exactly one element.
+     */
+    public void setDoubleList(final String propertyName, double[] values) {
+        if (propertyName == null) {
+            throw new NullPointerException("propertyName must not be null.");
+        }
+        Integer index = propertyMap.get(propertyName);
+        if (index == null) {
+            throw new IllegalArgumentException("non existent property: '"
+                    + propertyName + "'.");
+        }
+        if (type.getProperties().get(index) instanceof ListProperty) {
+            this.values[index] = values.clone();
+        } else {
+            if (values.length != 0) {
+                throw new IndexOutOfBoundsException("property is not a list");
+            }
+            this.values[index][0] = values[0];
+        }
+    }
+
+    /**
+     * Sets the value of a property-list.
+     * If the property is a list, the list will be set to a single entry.
+     * @param values Values to set for that property.
+     * @throws NullPointerException if {@code propertyName} is {@code null}.
+     * @throws IllegalArgumentException if the element type does not have
+     * a property with the given name.
+     */
+    public void setDouble(final String propertyName, double value) {
+        if (propertyName == null) {
+            throw new NullPointerException("propertyName must not be null.");
+        }
+        Integer index = propertyMap.get(propertyName);
+        if (index == null) {
+            throw new IllegalArgumentException("non existent property: '"
+                    + propertyName + "'.");
+        }
+        this.values[index] = new double[]{value};
+    }
+
+    /**
+     * Sets the value of a property-list.
+     * If the property is not a list, the first element is used.
+     * @param values Values to set for that property.
+     * @throws NullPointerException if {@code propertyName} is {@code null}.
+     * @throws IllegalArgumentException if the element type does not have
+     * a property with the given name.
+     * @throws IndexOutOfBoundsException if the property is not a list property
+     * and the given array does not have exactly one element.
+     */
+    public void setIntList(final String propertyName, int[] values) {
+        if (propertyName == null) {
+            throw new NullPointerException("propertyName must not be null.");
+        }
+        Integer index = propertyMap.get(propertyName);
+        if (index == null) {
+            throw new IllegalArgumentException("non existent property: '"
+                    + propertyName + "'.");
+        }
+        if (type.getProperties().get(index) instanceof ListProperty) {
+            this.values[index] = new double[values.length];
+            for (int i = 0; i < values.length; i++) {
+                this.values[index][i] = values[i];
+            }
+        } else {
+            if (values.length != 0) {
+                throw new IndexOutOfBoundsException("property is not a list");
+            }
+            this.values[index][0] = values[0];
+        }
+    }
+
+    /**
+     * Sets the value of a property-list.
+     * If the property is a list, the list will be set to a single entry.
+     * @param values Values to set for that property.
+     * @throws NullPointerException if {@code propertyName} is {@code null}.
+     * @throws IllegalArgumentException if the element type does not have
+     * a property with the given name.
+     */
+    public void setInt(final String propertyName, int value) {
+        if (propertyName == null) {
+            throw new NullPointerException("propertyName must not be null.");
+        }
+        Integer index = propertyMap.get(propertyName);
+        if (index == null) {
+            throw new IllegalArgumentException("non existent property: '"
+                    + propertyName + "'.");
+        }
+        this.values[index] = new double[]{value};
+    }
+
+    @Override
+    public Element clone(){
+        double[][] clone = new double[values.length][];
+        for (int i = 0; i < clone.length; i++) {
+            clone[i] = values[i].clone();
+        }
+        return new Element(clone, type, propertyMap);
     }
 }
