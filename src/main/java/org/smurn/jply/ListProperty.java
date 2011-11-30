@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ public class ListProperty extends Property {
      * @throws NullPointerException if {@code countType}, {@code name} or
      * {@code type} is {@code null}.
      */
-    public ListProperty(DataType countType, String name, DataType type) {
+    public ListProperty(final DataType countType, final String name,
+            final DataType type) {
         super(name, type);
         if (countType == null) {
             throw new NullPointerException("countType must not be null.");
@@ -56,7 +57,13 @@ public class ListProperty extends Property {
         return countType;
     }
 
-    static Property parse(String line) throws IOException {
+    /**
+     * Parses a list-property header line.
+     * @param line Header line.
+     * @return Property described on the line.
+     * @throws IOException if the header line as an invalid format.
+     */
+    static Property parse(final String line) throws IOException {
         if (!line.startsWith("property ")) {
             throw new IOException("not a property: '"
                     + line + "'");
@@ -85,10 +92,11 @@ public class ListProperty extends Property {
         try {
             dataType = DataType.parse(type);
             countDataType = DataType.parse(countType);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             throw new IOException(e.getMessage());
         }
-        
+
         return new ListProperty(countDataType, name, dataType);
     }
 

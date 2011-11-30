@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,50 @@
  */
 package org.smurn.jply;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 /**
- * An unbuffered equivalent to {@link BufferedReader} and
- * {@link InputStreamReader}.
+ * An unbuffered equivalent to {@link java.io.BufferedReader} and
+ * {@link java.io.InputStreamReader}.
  * <p>This is quite slow in comparison, but it guarantees that no additional
  * bytes are read with is important when reading an ASCII header followed
  * by binary data. Since it is only used to read the PLY header the
  * performance is not relevant.</p>
  */
-class UnbufferedASCIIReader extends Reader{
-    
+class UnbufferedASCIIReader extends Reader {
+
     private final InputStream stream;
-    
-    public UnbufferedASCIIReader(InputStream stream){
-        if (stream == null) throw new NullPointerException();
+
+    /**
+     * Creates an instance.
+     * @param stream Stream to read from.
+     */
+    public UnbufferedASCIIReader(final InputStream stream) {
+        if (stream == null) {
+            throw new NullPointerException();
+        }
         this.stream = stream;
     }
-    
-    public String readLine() throws IOException{
+
+    /**
+     * Reads the next line.
+     * @return The next line or {@code null} if the end of the stream is
+     * reached.
+     * @throws IOException if reading fails.
+     */
+    public String readLine() throws IOException {
         StringBuilder str = new StringBuilder();
-        while(true){
+        while (true) {
             int c = read();
-            if (c < 0) break;
-            if (c == '\n') break;
-            str.append((char)c);
+            if (c < 0) {
+                break;
+            }
+            if (c == '\n') {
+                break;
+            }
+            str.append((char) c);
         }
         return str.toString();
     }
@@ -53,13 +67,14 @@ class UnbufferedASCIIReader extends Reader{
     public int read() throws IOException {
         return stream.read();
     }
-    
+
     @Override
-    public int read(char[] cbuf, int off, int len) throws IOException {
+    public int read(final char[] cbuf, final int off,
+            final int len) throws IOException {
         byte[] bbuf = new byte[len];
         int bytesRead = stream.read(bbuf);
-        for(int i = 0; i < bytesRead;i++){
-            cbuf[off + i] = (char)bbuf[i];
+        for (int i = 0; i < bytesRead; i++) {
+            cbuf[off + i] = (char) bbuf[i];
         }
         return bytesRead;
     }

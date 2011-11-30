@@ -33,15 +33,10 @@ import java.util.zip.GZIPInputStream;
 public class PlyReader {
 
     private List<ElementType> elements;
-
     private Format format;
-
-    private InputStream stream;
-
-    private BufferedReader reader;
-
+    private InputStream binaryStream;
+    private BufferedReader asciiReader;
     private int nextElement = 0;
-
     private ElementReader currentReader;
 
     /**
@@ -52,7 +47,7 @@ public class PlyReader {
      * @throws NullPointerException if {@code file} is {@code null}.
      * @throws IOException if an error occurs during opening or reading.
      */
-    public PlyReader(File file) throws IOException {
+    public PlyReader(final File file) throws IOException {
         if (file == null) {
             throw new NullPointerException("file must not be null.");
         }
@@ -71,7 +66,7 @@ public class PlyReader {
      * @throws NullPointerException if {@code file} is {@code null}.
      * @throws IOException if an error occurs during opening or reading.
      */
-    public PlyReader(String file) throws IOException {
+    public PlyReader(final String file) throws IOException {
         this(new File(file));
     }
 
@@ -81,7 +76,7 @@ public class PlyReader {
      * @throws NullPointerException if {@code stream} is {@code null}.
      * @throws IOException if an error occurs during opening or reading.
      */
-    public PlyReader(InputStream stream) throws IOException {
+    public PlyReader(final InputStream stream) throws IOException {
         if (stream == null) {
             throw new NullPointerException("stream must not be null.");
         }
@@ -93,7 +88,7 @@ public class PlyReader {
      * @param stream Stream to read the file from.
      * @throws IOException if an error occurs during reading.
      */
-    private void readHeader(InputStream stream) throws IOException {
+    private void readHeader(final InputStream stream) throws IOException {
         UnbufferedASCIIReader hdrReader = new UnbufferedASCIIReader(stream);
         String magic = hdrReader.readLine();
         if (!"ply".equals(magic)) {
@@ -124,7 +119,8 @@ public class PlyReader {
             } else if (line.startsWith("element ")) {
                 if (currentElement != null) {
                     // finish the last element
-                    ElementType element = new ElementType(currentElement.getName(),
+                    ElementType element = new ElementType(
+                            currentElement.getName(),
                             currentElement.getCount(),
                             currentElementProperties);
                     elements.add(element);
@@ -139,11 +135,9 @@ public class PlyReader {
                 }
                 Property property = Property.parse(line);
                 currentElementProperties.add(property);
-            } else if (line.startsWith("comment ")) {
-                // ignore
             } else if (line.startsWith("end_header")) {
                 break;
-            } else {
+            } else if (!line.startsWith("comment ")) {
                 throw new IOException("Unsupported header entry: " + line);
             }
         }
@@ -161,12 +155,12 @@ public class PlyReader {
         elements = Collections.unmodifiableList(elements);
 
         if (format == Format.ASCII) {
-            this.reader = new BufferedReader(
+            this.asciiReader = new BufferedReader(
                     new InputStreamReader(stream, Charset.forName("US-ASCII")));
-            this.stream = null;
+            this.binaryStream = null;
         } else {
-            this.reader = null;
-            this.stream = stream;
+            this.asciiReader = null;
+            this.binaryStream = stream;
         }
 
     }
@@ -202,6 +196,10 @@ public class PlyReader {
         return currentReader;
     }
 
+    /**
+     * Creates the next element reader.
+     * @return next element Reader.
+     */
     private ElementReader nextElementReaderInternal() {
         if (nextElement >= elements.size()) {
             return null;
@@ -211,12 +209,13 @@ public class PlyReader {
                 case ASCII:
                     return new AsciiElementReader(
                             elements.get(nextElement),
-                            reader);
+                            asciiReader);
                 default:
                     throw new UnsupportedOperationException("PLY format "
                             + format + " is currently not supported.");
             }
-        } finally {
+        }
+        finally {
             nextElement++;
         }
     }

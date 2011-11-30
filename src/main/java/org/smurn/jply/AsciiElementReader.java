@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ class AsciiElementReader implements ElementReader {
      * @param type Type of the elements we read.
      * @param reader Source to read the elements from.
      */
-    AsciiElementReader(ElementType type, BufferedReader reader) {
+    AsciiElementReader(final ElementType type, final BufferedReader reader) {
         if (type == null) {
             throw new NullPointerException("definition must not be null.");
         }
@@ -58,7 +58,8 @@ class AsciiElementReader implements ElementReader {
         this.type = type;
         this.reader = reader;
 
-        HashMap<String, Integer> propertyMapTmp = new HashMap<String, Integer>();
+        HashMap<String, Integer> propertyMapTmp = 
+                new HashMap<String, Integer>();
         List<Property> properties = type.getProperties();
         for (int i = 0; i < properties.size(); i++) {
             propertyMapTmp.put(properties.get(i).getName(), i);

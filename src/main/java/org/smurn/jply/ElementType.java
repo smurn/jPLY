@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.util.List;
  * only be used accordingly to ensure best compatibility with other
  * PLY applications.</p>
  * <dl>
- * <dt>vertex</dt>
+ * <dt>{@code vertex}</dt>
  * <dd>Element type for vertex definitions. The {@code vertex} type should have
  * at least three (non-list) properties named {@code x}, {@code y} and {@code z}
  * for the position of the vertex. <br/>
@@ -39,7 +39,7 @@ import java.util.List;
  * added to a vertex with the {@code material_index} property
  * (of an integer type). The value of that property is a (zero-based) index
  * to an element of type {@code material} (see below).</dd>
- * <dt>face</dt>
+ * <dt>{@code face}</dt>
  * <dd>Element type for polygon definitions. The {@code face} type should have
  * at least one list-property called {@code vertex_index}, storing a list
  * of (zero-based) indicies into the {@code vertex} elements.<br/>
@@ -49,13 +49,13 @@ import java.util.List;
  * Color and material of a polygon can be specified with the same properties
  * as used for vertices.
  * </dd>
- * <dt>edge</dt>
+ * <dt>{@code edge}</dt>
  * <dd>Element type for line segments. The {@code edge} type should
  * have at least two (non-list) properties {@code vertex1} and {@code vertex2},
  * storing a (zero-based) index into the {@code vertex} elements.<br/>
  * Color and material of an edge can be specified with the same properties
  * as used for vertices.</dd>
- * <dt>material</dt>
+ * <dt>{@code material}</dt>
  * <dd>Type for material description elements. Each element describes
  * a material. Materials can be referenced from other elements using
  * the {@code material_index} property.<br>
@@ -71,7 +71,7 @@ import java.util.List;
  * <li>{@code diffuse_coeff}</li>
  * <li>{@code specular_red}</li>
  * <li>{@code specular_green}</li>
- * <li>{@code dspecular_blue}</li>
+ * <li>{@code specular_blue}</li>
  * <li>{@code specular_coeff}</li>
  * <li>{@code specular_power}</li>
  * </lu>
@@ -86,10 +86,8 @@ public class ElementType {
 
     /** Name of this type. */
     private final String name;
-
     /** Number of elements of this type. */
     private final int count;
-
     /** Properties of this type. */
     private final List<Property> properties;
 
@@ -103,15 +101,15 @@ public class ElementType {
      * {@code null}.
      * @throws IllegalArgumentException if {@code count} is negative.
      */
-    public ElementType(String name, int count,
-            List<Property> properties) {
+    public ElementType(final String name, final int count,
+            final List<Property> properties) {
         if (name == null) {
             throw new NullPointerException("name must not be null.");
         }
         if (properties == null) {
             throw new NullPointerException("properties must not be null.");
         }
-        if (count < 0){
+        if (count < 0) {
             throw new IllegalArgumentException("count must not be negative.");
         }
         this.name = name;
@@ -129,7 +127,8 @@ public class ElementType {
      * {@code null}.
      * @throws IllegalArgumentException if {@code count} is negative.
      */
-    public ElementType(String name, int count, Property... properties) {
+    public ElementType(final String name, final int count,
+            final Property... properties) {
         this(name, count, Arrays.asList(properties));
     }
 
@@ -160,7 +159,13 @@ public class ElementType {
         return count;
     }
 
-    static ElementType parse(String elementLine) throws IOException {
+    /**
+     * Parses a header line starting an element description.
+     * @param elementLine Header line.
+     * @return ElementType without properties.
+     * @throws IOException if the header line has an invalid format.
+     */
+    static ElementType parse(final String elementLine) throws IOException {
         if (!elementLine.startsWith("element ")) {
             throw new IOException("not an element: '"
                     + elementLine + "'");
@@ -177,7 +182,8 @@ public class ElementType {
         int count;
         try {
             count = Integer.parseInt(countStr);
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             throw new IOException("Invalid element entry. Not an integer: '"
                     + countStr + "'.");
         }

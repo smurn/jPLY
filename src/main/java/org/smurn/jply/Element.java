@@ -36,10 +36,11 @@ public class Element {
     /**
      * Creates an instance.
      * @param values Array containing an array of values for each property.
+     * @param type Element type of the element.
      * @param propertyMap Maps property names to indicies in {@code values}.
      */
-    Element(double[][] values, ElementType type, 
-            Map<String, Integer> propertyMap) {
+    Element(final double[][] values, final ElementType type, 
+            final Map<String, Integer> propertyMap) {
         if (values == null || type == null || propertyMap == null) {
             throw new NullPointerException();
         }
@@ -57,7 +58,7 @@ public class Element {
     }
 
     /**
-     * Gets a property value this element.
+     * Gets a property value of this element.
      * <p>If the property is a list-property, the first element is returned.</p>
      * @param propertyName Name of the property.
      * @return Value of the current element casted to {@code int}.
@@ -67,7 +68,7 @@ public class Element {
      * @throws IndexOutOfBoundsException if the requsted property is a
      * list property with zero elements.
      */
-    public int getInt(String propertyName) {
+    public int getInt(final String propertyName) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -84,7 +85,7 @@ public class Element {
     }
 
     /**
-     * Gets a property value this element.
+     * Gets a property value of this element.
      * <p>If the property is a list-property, the first element is returned.</p>
      * @param propertyName Name of the property.
      * @return Value of the current element casted to {@code double}.
@@ -94,7 +95,7 @@ public class Element {
      * @throws IndexOutOfBoundsException if the requsted property is a
      * list property with zero elements.
      */
-    public double getDouble(String propertyName) {
+    public double getDouble(final String propertyName) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -111,7 +112,7 @@ public class Element {
     }
 
     /**
-     * Gets a property value list this element.
+     * Gets a property value list of this element.
      * <p>If the property is not list-property, a list with a single
      * element is returned.</p>
      * @param propertyName Name of the property.
@@ -120,7 +121,7 @@ public class Element {
      * @throws IllegalArgumentException if the element type does not have
      * a property with the given name.
      */
-    public int[] getIntList(String propertyName) {
+    public int[] getIntList(final String propertyName) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -141,7 +142,7 @@ public class Element {
     }
 
     /**
-     * Gets a property value list this element.
+     * Gets a property value list of this element.
      * <p>If the property is not list-property, a list with a single
      * element is returned.</p>
      * @param propertyName Name of the property.
@@ -150,7 +151,7 @@ public class Element {
      * @throws IllegalArgumentException if the element type does not have
      * a property with the given name.
      */
-    public double[] getDoubleList(String propertyName) {
+    public double[] getDoubleList(final String propertyName) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }

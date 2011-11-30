@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ public class Property {
 
     /** Name of this property. */
     private final String name;
-
     /** Type of this property. */
     private final DataType type;
 
@@ -46,7 +45,7 @@ public class Property {
      * @throws NullPointerException if {@code name} or {@code type} is
      * {@code null}.
      */
-    public Property(String name, DataType type) {
+    public Property(final String name, final DataType type) {
         if (name == null) {
             throw new NullPointerException("name must not be null.");
         }
@@ -79,7 +78,13 @@ public class Property {
         return "property " + type + " " + name;
     }
 
-    static Property parse(String propertyLine) throws IOException {
+    /**
+     * Parses a property header line.
+     * @param propertyLine Header line.
+     * @return Property described on the line.
+     * @throws IOException if the header line as an invalid format.
+     */
+    static Property parse(final String propertyLine) throws IOException {
         if (!propertyLine.startsWith("property ")) {
             throw new IOException("not a property: '"
                     + propertyLine + "'");
@@ -101,10 +106,11 @@ public class Property {
         DataType dataType;
         try {
             dataType = DataType.parse(type);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             throw new IOException(e.getMessage());
         }
-        
+
         return new Property(name, dataType);
     }
 }

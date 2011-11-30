@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,20 @@ import java.util.Locale;
  */
 enum Format {
 
+    /** Data is stored in ASCII format. */
     ASCII,
+    /** Data is stored in little endian binary format. */
     BINARY_LITTLE_ENDIAN,
+    /** Data is stored in big endian binary format. */
     BINARY_BIG_ENDIAN;
 
-    public static Format parse(String formatLine) throws IOException {
+    /**
+     * Parses the header line defining the format.
+     * @param formatLine Header line.
+     * @return Format defined by it.
+     * @throws IOException invalid format header line.
+     */
+    static Format parse(final String formatLine) throws IOException {
         if (!formatLine.startsWith("format ")) {
             throw new IOException("not a format definition: '"
                     + formatLine + "'");

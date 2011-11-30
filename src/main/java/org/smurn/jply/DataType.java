@@ -20,16 +20,29 @@ package org.smurn.jply;
  */
 public enum DataType {
 
+    /** One byte signed integer. */
     CHAR,
+    /** One byte unsigned integer. */
     UCHAR,
+    /** Two byte signed integer. */
     SHORT,
+    /** Two byte unsigned integer. */
     USHORT,
+    /** Four byte signed integer. */
     INT,
+    /** Four byte unsigned integer. */
     UINT,
+    /** four byte floating point number. */
     FLOAT,
+    /** Eight byte byte floating point number. */
     DOUBLE;
 
-    static DataType parse(String typeName) {
+    /**
+     * Parses the PLY name of a data type.
+     * @param typeName Name of the data type.
+     * @return Data type.
+     */
+    static DataType parse(final String typeName) {
         if (typeName == null) {
             throw new NullPointerException("typeName must not be null.");
         }
