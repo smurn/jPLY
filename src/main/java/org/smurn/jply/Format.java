@@ -51,8 +51,8 @@ enum Format {
         String version = parts[1];
 
         if (!version.equals("1.0")) {
-            throw new IOException("Unsupported version of PLY:"
-                    + version + ". Supported version is 1.0");
+            throw new IOException("Unsupported version of PLY: '"
+                    + version + "'. Supported version is 1.0");
         }
 
         if (format.equals("ascii")) {

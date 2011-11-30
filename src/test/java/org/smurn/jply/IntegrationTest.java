@@ -20,8 +20,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author stefan
  */
 public class IntegrationTest {
 
@@ -104,6 +102,4 @@ public class IntegrationTest {
         
         assertNull(face = faces.readElement());
     }
-    
-    
 }
