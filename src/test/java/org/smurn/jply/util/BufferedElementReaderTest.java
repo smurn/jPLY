@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.smurn.jply.DataType;
 import org.smurn.jply.ElementReader;
 import org.smurn.jply.ElementType;
-import org.smurn.jply.ListProperty;
 import org.smurn.jply.Property;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -108,6 +107,35 @@ public class BufferedElementReaderTest {
     }
 
     @Test
+    public void reset() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+
+        Element element0 = new Element(type);
+        element0.setInt("bar", 12);
+        Element element1 = new Element(type);
+        element1.setInt("bar", 12);
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+        when(reader.readElement()).
+                thenReturn(element0).
+                thenReturn(element1).
+                thenReturn(null);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+
+        assertEquals(element0, target.readElement());
+        assertEquals(element1, target.readElement());
+        assertNull(target.readElement());
+        target.reset();
+        assertEquals(element0, target.readElement());
+        assertEquals(element1, target.readElement());
+        assertNull(target.readElement());
+    }
+
+    @Test
     public void indexReadAfter() throws IOException {
         ElementType type = new ElementType(
                 "foo",
@@ -182,6 +210,47 @@ public class BufferedElementReaderTest {
 
         assertEquals(element0, target.readElement());
         assertEquals(element1, target.readElement());
+    }
+
+    @Test
+    public void detachedRead() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+
+        Element element0 = new Element(type);
+        element0.setInt("bar", 12);
+        Element element1 = new Element(type);
+        element1.setInt("bar", 12);
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+        when(reader.readElement()).
+                thenReturn(element0).
+                thenReturn(element1).
+                thenReturn(null);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+
+        target.detach();
+
+        assertEquals(element0, target.readElement());
+        assertEquals(element1, target.readElement());
+    }
+
+    @Test
+    public void detachClosesUnderlyingStream() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+
+        target.detach();
+        verify(reader).close();
     }
 
     @Test

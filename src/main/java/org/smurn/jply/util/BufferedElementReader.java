@@ -41,6 +41,7 @@ public class BufferedElementReader implements ElementReader {
     private List<Element> buffer = new ArrayList<Element>();
     private int nextElement = 0;
     private boolean closed = false;
+    private boolean sourceClosed = false;
 
     /**
      * Creates an instance.
@@ -102,7 +103,13 @@ public class BufferedElementReader implements ElementReader {
             throw new IllegalStateException("Reader is closed.");
         }
         while (nextElement >= buffer.size()) {
-            Element element = reader.readElement();
+            Element element;
+            if (sourceClosed) {
+                // we have read everything already.
+                element = null;
+            } else {
+                element = reader.readElement();
+            }
             if (element == null) {
                 return null;
             } else {
@@ -112,9 +119,44 @@ public class BufferedElementReader implements ElementReader {
         return buffer.get(nextElement++);
     }
 
+    /**
+     * Resets this stream to the starting position.
+     * <p>After calling this the next call to {@link #readElement()}
+     * will return the first element again.</p>
+     */
+    public void reset() {
+        nextElement = 0;
+    }
+
+    /**
+     * Detaches this stream from the underlying stream by buffering every
+     * element.
+     * <P>This method ensures that all elements from the underlying stream
+     * have been read and stored in the internal buffer. The underlying
+     * stream is then closed, but this stream is kept open.</p>
+     * <p>This stream should still be closed using {@link #close()} once
+     * no longer needed.</p>
+     * @throws IOException if reading fails.
+     * @throws IllegalStateException if the stream is closed.
+     */
+    public void detach() throws IOException {
+        if (closed) {
+            throw new IllegalStateException("Reader is closed.");
+        }
+
+        for (Element element = reader.readElement();
+                element != null; element = reader.readElement()) {
+            buffer.add(element);
+        }
+
+        reader.close();
+        sourceClosed = true;
+    }
+
     @Override
     public void close() throws IOException {
         closed = true;
+        sourceClosed = true;
         buffer = null;  // let the GC have it.
         reader.close();
     }
