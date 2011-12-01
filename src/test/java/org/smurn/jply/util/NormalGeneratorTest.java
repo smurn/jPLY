@@ -15,11 +15,7 @@
  */
 package org.smurn.jply.util;
 
-import org.smurn.jply.DataType;
-import org.smurn.jply.Element;
-import org.smurn.jply.ElementType;
 import org.smurn.jply.ListProperty;
-import org.smurn.jply.Property;
 import java.io.IOException;
 import org.smurn.jply.Element;
 import org.junit.Test;
