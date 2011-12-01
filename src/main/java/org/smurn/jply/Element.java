@@ -311,6 +311,41 @@ public final class Element implements Cloneable {
         return builder.isEquals();
     }
 
+    /**
+     * Checks if two elements are approximately equal.
+     * <p>Other than {@link #equals(java.lang.Object)} this method
+     * allows to be tolerant to small numerical differences in the values.</p>
+     * @param rhs Element to compare against.
+     * @param epsilon Maximal allowed difference between two values.
+     * @return {@code true} if they have the same type and structure
+     * and no value differs by more than {@code epsilon}.
+     */
+    public boolean equals(final Element rhs, final double epsilon) {
+        if (rhs == null) {
+            return false;
+        }
+        if (rhs == this) {
+            return true;
+        }
+        if (!this.type.equals(rhs.type)) {
+            return false;
+        }
+        if (data.length != rhs.data.length) {
+            return false;
+        }
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].length != rhs.data[i].length) {
+                return false;
+            }
+            for (int j = 0; j < data[i].length; j++) {
+                if (Math.abs(data[i][j] - rhs.data[i][j]) > epsilon) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public int hashCode() {
         HashCodeBuilder builder = new HashCodeBuilder();
