@@ -15,6 +15,7 @@
  */
 package org.smurn.jply;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -316,5 +317,28 @@ public final class Element implements Cloneable {
         builder.append(type);
         builder.append(data);
         return builder.toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append("Element ");
+        str.append(type.getName());
+        str.append(" {");
+        for (int i = 0; i < type.getProperties().size(); i++) {
+            Property property = type.getProperties().get(i);
+            if (i > 0) {
+                str.append(" ");
+            }
+            str.append(property.getName());
+            str.append("=");
+            if (property instanceof ListProperty) {
+                str.append(Arrays.toString(data[i]));
+            } else {
+                str.append(data[i][0]);
+            }
+        }
+        str.append("}");
+        return str.toString();
     }
 }
