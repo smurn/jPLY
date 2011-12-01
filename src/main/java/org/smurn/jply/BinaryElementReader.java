@@ -37,6 +37,7 @@ class BinaryElementReader implements ElementReader {
     /**
      * Creates an instance.
      * @param type Type of the elements to be read.
+     * @param count Number of elements to be read.
      * @param stream Stream to read the data from. Must be configured
      * to use the right byte order.
      * @throws NullPointerException if {@code stream} is {@code null}.
@@ -103,8 +104,8 @@ class BinaryElementReader implements ElementReader {
      */
     private double[] readListProperty(final ListProperty property)
             throws IOException {
-        int count = (int) stream.read(property.getCountType());
-        double[] values = new double[count];
+        int valueCount = (int) stream.read(property.getCountType());
+        double[] values = new double[valueCount];
         for (int i = 0; i < values.length; i++) {
             values[i] = stream.read(property.getType());
         }

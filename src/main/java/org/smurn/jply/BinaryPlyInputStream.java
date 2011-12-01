@@ -30,6 +30,8 @@ class BinaryPlyInputStream {
     private final ReadableByteChannel channel;
     /** Buffer used for reading. */
     private final ByteBuffer buffer;
+    /** Size of the buffer in bytes. */
+    private static final int BUFFER_SIZE = 1024;
 
     /**
      * Creates an instance.
@@ -47,7 +49,7 @@ class BinaryPlyInputStream {
             throw new NullPointerException("byteOrder must not be null.");
         }
         this.channel = channel;
-        this.buffer = ByteBuffer.allocate(1024);
+        this.buffer = ByteBuffer.allocate(BUFFER_SIZE);
         this.buffer.order(byteOrder);
     }
 

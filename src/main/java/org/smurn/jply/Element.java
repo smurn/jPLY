@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public final class Element implements Cloneable {
 
     /** Values of this element. The first index selects the property. */
-    private final double[][] values;
+    private final double[][] data;
     /** Type of this element. */
     private final ElementType type;
     /** Maps from property name to the index in {@code values}. */
@@ -43,7 +43,7 @@ public final class Element implements Cloneable {
         if (values == null || type == null) {
             throw new NullPointerException();
         }
-        this.values = values;
+        this.data = values;
         this.type = type;
         this.propertyMap = type.getPropertyMap();
     }
@@ -57,12 +57,12 @@ public final class Element implements Cloneable {
         this.type = type;
         this.propertyMap = type.getPropertyMap();
         List<Property> properties = type.getProperties();
-        values = new double[properties.size()][];
-        for (int i = 0; i < values.length; i++) {
+        data = new double[properties.size()][];
+        for (int i = 0; i < data.length; i++) {
             if (properties.get(i) instanceof ListProperty) {
-                values[i] = new double[0];
+                data[i] = new double[0];
             } else {
-                values[i] = new double[]{0.0};
+                data[i] = new double[]{0.0};
             }
         }
     }
@@ -83,7 +83,7 @@ public final class Element implements Cloneable {
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      * @throws IllegalArgumentException if the element type does not have
      * a property with the given name.
-     * @throws IndexOutOfBoundsException if the requsted property is a
+     * @throws IndexOutOfBoundsException if the requested property is a
      * list property with zero elements.
      */
     public int getInt(final String propertyName) {
@@ -95,11 +95,11 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        if (values[index].length == 0) {
+        if (data[index].length == 0) {
             throw new IndexOutOfBoundsException(
                     "The property value is a list with zero entries.");
         }
-        return (int) values[index][0];
+        return (int) data[index][0];
     }
 
     /**
@@ -110,7 +110,7 @@ public final class Element implements Cloneable {
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      * @throws IllegalArgumentException if the element type does not have
      * a property with the given name.
-     * @throws IndexOutOfBoundsException if the requsted property is a
+     * @throws IndexOutOfBoundsException if the requested property is a
      * list property with zero elements.
      */
     public double getDouble(final String propertyName) {
@@ -122,11 +122,11 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        if (values[index].length == 0) {
+        if (data[index].length == 0) {
             throw new IndexOutOfBoundsException(
                     "The property value is a list with zero entries.");
         }
-        return (double) values[index][0];
+        return (double) data[index][0];
     }
 
     /**
@@ -148,9 +148,9 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        int[] v = new int[values[index].length];
+        int[] v = new int[data[index].length];
         for (int i = 0; i < v.length; i++) {
-            v[i] = (int) values[index][i];
+            v[i] = (int) data[index][i];
         }
         return v;
     }
@@ -174,12 +174,13 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        return values[index].clone();
+        return data[index].clone();
     }
 
     /**
      * Sets the value of a property-list.
      * If the property is not a list, the first element is used.
+     * @param propertyName Name of the property to set.
      * @param values Values to set for that property.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      * @throws IllegalArgumentException if the element type does not have
@@ -187,7 +188,8 @@ public final class Element implements Cloneable {
      * @throws IndexOutOfBoundsException if the property is not a list property
      * and the given array does not have exactly one element.
      */
-    public void setDoubleList(final String propertyName, double[] values) {
+    public void setDoubleList(final String propertyName,
+            final double[] values) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -197,24 +199,25 @@ public final class Element implements Cloneable {
                     + propertyName + "'.");
         }
         if (type.getProperties().get(index) instanceof ListProperty) {
-            this.values[index] = values.clone();
+            this.data[index] = values.clone();
         } else {
             if (values.length != 0) {
                 throw new IndexOutOfBoundsException("property is not a list");
             }
-            this.values[index][0] = values[0];
+            this.data[index][0] = values[0];
         }
     }
 
     /**
      * Sets the value of a property-list.
      * If the property is a list, the list will be set to a single entry.
-     * @param values Values to set for that property.
+     * @param propertyName Name of the property to set.
+     * @param value Value to set for that property.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      * @throws IllegalArgumentException if the element type does not have
      * a property with the given name.
      */
-    public void setDouble(final String propertyName, double value) {
+    public void setDouble(final String propertyName, final double value) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -223,12 +226,13 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        this.values[index] = new double[]{value};
+        this.data[index] = new double[]{value};
     }
 
     /**
      * Sets the value of a property-list.
      * If the property is not a list, the first element is used.
+     * @param propertyName Name of the property to set.
      * @param values Values to set for that property.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      * @throws IllegalArgumentException if the element type does not have
@@ -236,7 +240,7 @@ public final class Element implements Cloneable {
      * @throws IndexOutOfBoundsException if the property is not a list property
      * and the given array does not have exactly one element.
      */
-    public void setIntList(final String propertyName, int[] values) {
+    public void setIntList(final String propertyName, final int[] values) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -246,27 +250,28 @@ public final class Element implements Cloneable {
                     + propertyName + "'.");
         }
         if (type.getProperties().get(index) instanceof ListProperty) {
-            this.values[index] = new double[values.length];
+            this.data[index] = new double[values.length];
             for (int i = 0; i < values.length; i++) {
-                this.values[index][i] = values[i];
+                this.data[index][i] = values[i];
             }
         } else {
             if (values.length != 0) {
                 throw new IndexOutOfBoundsException("property is not a list");
             }
-            this.values[index][0] = values[0];
+            this.data[index][0] = values[0];
         }
     }
 
     /**
      * Sets the value of a property-list.
      * If the property is a list, the list will be set to a single entry.
-     * @param values Values to set for that property.
+     * @param propertyName Name of the property to set.
+     * @param value Value to set for that property.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      * @throws IllegalArgumentException if the element type does not have
      * a property with the given name.
      */
-    public void setInt(final String propertyName, int value) {
+    public void setInt(final String propertyName, final int value) {
         if (propertyName == null) {
             throw new NullPointerException("propertyName must not be null.");
         }
@@ -275,20 +280,20 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        this.values[index] = new double[]{value};
+        this.data[index] = new double[]{value};
     }
 
     @Override
     public Element clone() {
-        double[][] clone = new double[values.length][];
+        double[][] clone = new double[data.length][];
         for (int i = 0; i < clone.length; i++) {
-            clone[i] = values[i].clone();
+            clone[i] = data[i].clone();
         }
         return new Element(clone, type);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -301,7 +306,7 @@ public final class Element implements Cloneable {
         Element rhs = (Element) obj;
         EqualsBuilder builder = new EqualsBuilder();
         builder.append(type, rhs.type);
-        builder.append(values, rhs.values);
+        builder.append(data, rhs.data);
         return builder.isEquals();
     }
 
@@ -309,7 +314,7 @@ public final class Element implements Cloneable {
     public int hashCode() {
         HashCodeBuilder builder = new HashCodeBuilder();
         builder.append(type);
-        builder.append(values);
+        builder.append(data);
         return builder.toHashCode();
     }
 }
