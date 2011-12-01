@@ -19,7 +19,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Declaration of an element type.
@@ -77,12 +81,12 @@ import java.util.List;
  * </lu>
  * </dd>
  * The data type mentioned in the specification is {@code float} for all
- * properties but indicies where it should be {@code int} and color components
+ * properties but indices where it should be {@code int} and color components
  * where it should be {@code uchar}.
  * </dl>
  * <p>All instances of this class are immutable.</p>
  */
-public class ElementType {
+public final class ElementType {
 
     /** Name of this type. */
     private final String name;
@@ -90,6 +94,8 @@ public class ElementType {
     private final int count;
     /** Properties of this type. */
     private final List<Property> properties;
+    /** Maps property names to property index. */
+    private final Map<String, Integer> propertyMap;
 
     /**
      * Creates an instance.
@@ -116,6 +122,13 @@ public class ElementType {
         this.count = count;
         this.properties = Collections.unmodifiableList(
                 new ArrayList<Property>(properties));
+
+        HashMap<String, Integer> propertyMapTmp =
+                new HashMap<String, Integer>();
+        for (int i = 0; i < properties.size(); i++) {
+            propertyMapTmp.put(properties.get(i).getName(), i);
+        }
+        this.propertyMap = Collections.unmodifiableMap(propertyMapTmp);
     }
 
     /**
@@ -160,6 +173,15 @@ public class ElementType {
     }
 
     /**
+     * Gets the map that maps from property name to the index of that
+     * property in the {@link #getProperties()} list.
+     * @return Immutable map.
+     */
+    Map<String, Integer> getPropertyMap() {
+        return propertyMap;
+    }
+
+    /**
      * Parses a header line starting an element description.
      * @param elementLine Header line.
      * @return ElementType without properties.
@@ -193,5 +215,33 @@ public class ElementType {
     @Override
     public String toString() {
         return "element " + name + " " + count + " properties=" + properties;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        ElementType rhs = (ElementType) obj;
+        EqualsBuilder builder = new EqualsBuilder();
+        builder.append(name, rhs.name);
+        builder.append(count, rhs.count);
+        builder.append(properties, rhs.properties);
+        return builder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder builder = new HashCodeBuilder();
+        builder.append(name);
+        builder.append(count);
+        builder.append(properties);
+        return builder.toHashCode();
     }
 }

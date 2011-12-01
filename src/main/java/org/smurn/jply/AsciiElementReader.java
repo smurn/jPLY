@@ -18,8 +18,6 @@ package org.smurn.jply;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +31,6 @@ class AsciiElementReader implements ElementReader {
 
     /** Source to read from. */
     private final BufferedReader reader;
-
-    /** Maps property names to property index. */
-    private final Map<String, Integer> propertyMap;
 
     /** Index of the next row to read. */
     private int nextRow = 0;
@@ -57,14 +52,6 @@ class AsciiElementReader implements ElementReader {
         }
         this.type = type;
         this.reader = reader;
-
-        HashMap<String, Integer> propertyMapTmp = 
-                new HashMap<String, Integer>();
-        List<Property> properties = type.getProperties();
-        for (int i = 0; i < properties.size(); i++) {
-            propertyMapTmp.put(properties.get(i).getName(), i);
-        }
-        this.propertyMap = Collections.unmodifiableMap(propertyMapTmp);
     }
 
     @Override
@@ -107,7 +94,7 @@ class AsciiElementReader implements ElementReader {
         }
 
         nextRow++;
-        return new Element(values, type, propertyMap);
+        return new Element(values, type);
     }
 
     @Override

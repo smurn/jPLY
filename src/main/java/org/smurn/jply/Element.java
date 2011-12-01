@@ -15,7 +15,10 @@
  */
 package org.smurn.jply;
 
+import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Element of a PLY file.
@@ -35,16 +38,33 @@ public final class Element implements Cloneable {
      * Creates an instance.
      * @param values Array containing an array of values for each property.
      * @param type Element type of the element.
-     * @param propertyMap Maps property names to indicies in {@code values}.
      */
-    Element(final double[][] values, final ElementType type,
-            final Map<String, Integer> propertyMap) {
-        if (values == null || type == null || propertyMap == null) {
+    Element(final double[][] values, final ElementType type) {
+        if (values == null || type == null) {
             throw new NullPointerException();
         }
         this.values = values;
         this.type = type;
-        this.propertyMap = propertyMap;
+        this.propertyMap = type.getPropertyMap();
+    }
+
+    /**
+     * Creates an instance with default values.
+     * <p>Properties are set to 0, list properties are set to an empty list.</p>
+     * @param type Type of the element to create.
+     */
+    public Element(final ElementType type) {
+        this.type = type;
+        this.propertyMap = type.getPropertyMap();
+        List<Property> properties = type.getProperties();
+        values = new double[properties.size()][];
+        for (int i = 0; i < values.length; i++) {
+            if (properties.get(i) instanceof ListProperty) {
+                values[i] = new double[0];
+            } else {
+                values[i] = new double[]{0.0};
+            }
+        }
     }
 
     /**
@@ -259,11 +279,37 @@ public final class Element implements Cloneable {
     }
 
     @Override
-    public Element clone(){
+    public Element clone() {
         double[][] clone = new double[values.length][];
         for (int i = 0; i < clone.length; i++) {
             clone[i] = values[i].clone();
         }
-        return new Element(clone, type, propertyMap);
+        return new Element(clone, type);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Element rhs = (Element) obj;
+        EqualsBuilder builder = new EqualsBuilder();
+        builder.append(type, rhs.type);
+        builder.append(values, rhs.values);
+        return builder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder builder = new HashCodeBuilder();
+        builder.append(type);
+        builder.append(values);
+        return builder.toHashCode();
     }
 }

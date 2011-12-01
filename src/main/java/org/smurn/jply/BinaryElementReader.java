@@ -28,8 +28,6 @@ class BinaryElementReader implements ElementReader {
 
     /** Type of the elements we read. */
     private final ElementType type;
-    /** Maps property names to property index. */
-    private final Map<String, Integer> propertyMap;
     /** Stream to read the data from. */
     private final BinaryPlyInputStream stream;
     /** Index of the next row to read. */
@@ -51,14 +49,6 @@ class BinaryElementReader implements ElementReader {
         }
         this.type = type;
         this.stream = stream;
-
-        HashMap<String, Integer> propertyMapTmp =
-                new HashMap<String, Integer>();
-        List<Property> properties = type.getProperties();
-        for (int i = 0; i < properties.size(); i++) {
-            propertyMapTmp.put(properties.get(i).getName(), i);
-        }
-        this.propertyMap = Collections.unmodifiableMap(propertyMapTmp);
     }
 
     @Override
@@ -92,7 +82,7 @@ class BinaryElementReader implements ElementReader {
         }
 
         nextRow++;
-        return new Element(values, type, propertyMap);
+        return new Element(values, type);
     }
 
     /**

@@ -16,6 +16,8 @@
 package org.smurn.jply;
 
 import java.io.IOException;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Declaration of a property of an element.
@@ -112,5 +114,31 @@ public class Property {
         }
 
         return new Property(name, dataType);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Property rhs = (Property) obj;
+        EqualsBuilder builder = new EqualsBuilder();
+        builder.append(name, rhs.name);
+        builder.append(type, rhs.type);
+        return builder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder builder = new HashCodeBuilder();
+        builder.append(name);
+        builder.append(type);
+        return builder.toHashCode();
     }
 }
