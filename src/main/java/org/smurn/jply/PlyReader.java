@@ -26,16 +26,20 @@ import java.nio.channels.Channels;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
  * Reads meshes in the PLY file format.
  */
-public class PlyReader {
+public final class PlyReader {
 
     /** Types in this file. */
     private List<ElementType> elements;
+    /** Maps element type name to number of elements of this type. */
+    private Map<String, Integer> elementCounts;
     /** Format of the file. */
     private Format format;
     /** Stream to read the data from. {@code null} if the format is ASCII. */
@@ -107,9 +111,10 @@ public class PlyReader {
         }
 
         format = null;
-        ElementType currentElement = null;
+        ElementType.HeaderEntry currentElement = null;
         List<Property> currentElementProperties = null;
         elements = new ArrayList<ElementType>();
+        elementCounts = new HashMap<String, Integer>();
 
         for (String line = hdrReader.readLine(); true;
                 line = hdrReader.readLine()) {
@@ -131,9 +136,10 @@ public class PlyReader {
                     // finish the last element
                     ElementType element = new ElementType(
                             currentElement.getName(),
-                            currentElement.getCount(),
                             currentElementProperties);
                     elements.add(element);
+                    elementCounts.put(currentElement.getName(),
+                            currentElement.getCount());
                     currentElement = null;
                     currentElementProperties = null;
                 }
@@ -155,9 +161,10 @@ public class PlyReader {
         if (currentElement != null) {
             // finish the last element
             ElementType element = new ElementType(currentElement.getName(),
-                    currentElement.getCount(),
                     currentElementProperties);
             elements.add(element);
+            elementCounts.put(currentElement.getName(),
+                    currentElement.getCount());
             currentElement = null;
             currentElementProperties = null;
         }
@@ -200,6 +207,42 @@ public class PlyReader {
     }
 
     /**
+     * Gets the number of elements for a given element type.
+     * @param elementType Name of the element type.
+     * @return Number of elements of the given type.
+     * @throws NullPointerException if {@code elementType} is {@code null}.
+     * @throws IllegalArgumentException if there is no such type in this
+     * file.
+     */
+    public int getElementCount(final String elementType) {
+        if (elementType == null) {
+            throw new IllegalArgumentException("elementType must not be null.");
+        }
+        Integer count = elementCounts.get(elementType);
+        if (count == null) {
+            throw new IllegalArgumentException(
+                    "Type does not exist in this file.");
+        } else {
+            return count;
+        }
+    }
+
+    /**
+     * Gets the number of elements for a given element type.
+     * @param elementType Name of the element type.
+     * @return Number of elements of the given type.
+     * @throws NullPointerException if {@code elementType} is {@code null}.
+     * @throws IllegalArgumentException if there is no such type in this
+     * file.
+     */
+    public int getElementCount(final ElementType elementType) {
+        if (elementType == null) {
+            throw new IllegalArgumentException("elementType must not be null.");
+        }
+        return getElementCount(elementType.getName());
+    }
+
+    /**
      * Returns the reader to read the first group of elements.
      * <p>Each group corresponds to an element type. The groups are
      * returned in the order given in the file. This is also the
@@ -239,15 +282,18 @@ public class PlyReader {
             return null;
         }
         try {
+            ElementType type = elements.get(nextElement);
             switch (format) {
                 case ASCII:
                     return new AsciiElementReader(
-                            elements.get(nextElement),
+                            type,
+                            getElementCount(type),
                             asciiReader);
                 case BINARY_BIG_ENDIAN:
                 case BINARY_LITTLE_ENDIAN:
                     return new BinaryElementReader(
-                            elements.get(nextElement),
+                            type,
+                            getElementCount(type),
                             binaryStream);
                 default:
                     throw new UnsupportedOperationException("PLY format "

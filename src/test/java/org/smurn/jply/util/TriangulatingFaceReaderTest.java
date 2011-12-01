@@ -34,7 +34,7 @@ public class TriangulatingFaceReaderTest {
     public void getElementType() {
 
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -51,7 +51,7 @@ public class TriangulatingFaceReaderTest {
     public void getCount() {
 
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -68,7 +68,7 @@ public class TriangulatingFaceReaderTest {
     public void readTriangle() throws IOException {
 
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -89,7 +89,7 @@ public class TriangulatingFaceReaderTest {
     public void readQuad() throws IOException {
 
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -118,7 +118,7 @@ public class TriangulatingFaceReaderTest {
     public void readMixed() throws IOException {
 
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -170,7 +170,7 @@ public class TriangulatingFaceReaderTest {
     @Test
     public void closeCallsClose() throws IOException {
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -188,7 +188,7 @@ public class TriangulatingFaceReaderTest {
     @Test(expected = IllegalStateException.class)
     public void readClosedFails() throws IOException {
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));
@@ -205,7 +205,7 @@ public class TriangulatingFaceReaderTest {
     @Test(expected = IllegalStateException.class)
     public void readClosedFailsWithQueue() throws IOException {
         ElementType type = new ElementType(
-                "face", 1,
+                "face",
                 new ListProperty(
                 DataType.UCHAR,
                 "vertex_index", DataType.INT));

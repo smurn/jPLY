@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Reads elements from a PLY file in ASCII format.
@@ -31,6 +30,8 @@ class AsciiElementReader implements ElementReader {
 
     /** Source to read from. */
     private final BufferedReader reader;
+    /** Number of elements. */
+    private final int count;
 
     /** Index of the next row to read. */
     private int nextRow = 0;
@@ -40,10 +41,12 @@ class AsciiElementReader implements ElementReader {
 
     /**
      * Creates an instance.
-     * @param type Type of the elements we read.
+     * @param type Type of the elements to read.
+     * @param count Number of elements to read.
      * @param reader Source to read the elements from.
      */
-    AsciiElementReader(final ElementType type, final BufferedReader reader) {
+    AsciiElementReader(final ElementType type, final int count,
+            final BufferedReader reader) {
         if (type == null) {
             throw new NullPointerException("definition must not be null.");
         }
@@ -51,6 +54,7 @@ class AsciiElementReader implements ElementReader {
             throw new NullPointerException("reader must not be null.");
         }
         this.type = type;
+        this.count = count;
         this.reader = reader;
     }
 
@@ -64,7 +68,7 @@ class AsciiElementReader implements ElementReader {
         if (closed) {
             throw new IllegalStateException("Reader is closed.");
         }
-        if (nextRow >= type.getCount()) {
+        if (nextRow >= getCount()) {
             return null;
         }
 
@@ -99,14 +103,14 @@ class AsciiElementReader implements ElementReader {
 
     @Override
     public int getCount() {
-        return getElementType().getCount();
+        return count;
     }
 
     @Override
     public void close() throws IOException {
         // Consume the remaining elements so that we
         // are at the right position for the next group of elements.
-        while (nextRow < type.getCount()) {
+        while (nextRow < getCount()) {
             String line = reader.readLine();
             if (line == null) {
                 throw new IOException("Unexpected end of file.");

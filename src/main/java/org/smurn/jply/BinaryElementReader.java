@@ -16,10 +16,7 @@
 package org.smurn.jply;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Reads elements from a PLY file in binary format (used both byte orders).
@@ -30,6 +27,8 @@ class BinaryElementReader implements ElementReader {
     private final ElementType type;
     /** Stream to read the data from. */
     private final BinaryPlyInputStream stream;
+    /** Number of elements. */
+    private final int count;
     /** Index of the next row to read. */
     private int nextRow = 0;
     /** Flag indicating if the user closed this reader. */
@@ -42,12 +41,13 @@ class BinaryElementReader implements ElementReader {
      * to use the right byte order.
      * @throws NullPointerException if {@code stream} is {@code null}.
      */
-    BinaryElementReader(final ElementType type,
+    BinaryElementReader(final ElementType type, final int count,
             final BinaryPlyInputStream stream) {
         if (type == null || stream == null) {
             throw new NullPointerException();
         }
         this.type = type;
+        this.count = count;
         this.stream = stream;
     }
 
@@ -58,7 +58,7 @@ class BinaryElementReader implements ElementReader {
 
     @Override
     public int getCount() {
-        return getElementType().getCount();
+        return count;
     }
 
     @Override
@@ -66,7 +66,7 @@ class BinaryElementReader implements ElementReader {
         if (closed) {
             throw new IllegalStateException("Reader is closed.");
         }
-        if (nextRow >= type.getCount()) {
+        if (nextRow >= getCount()) {
             return null;
         }
 

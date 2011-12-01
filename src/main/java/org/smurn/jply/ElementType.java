@@ -90,8 +90,6 @@ public final class ElementType {
 
     /** Name of this type. */
     private final String name;
-    /** Number of elements of this type. */
-    private final int count;
     /** Properties of this type. */
     private final List<Property> properties;
     /** Maps property names to property index. */
@@ -100,26 +98,19 @@ public final class ElementType {
     /**
      * Creates an instance.
      * @param name  Name of the element type.
-     * @param count Number of elements of this type.
      * @param properties Properties of the elements of this type.
      * Must not be {@code null}.
      * @throws NullPointerException if {@code name} or {@code properties} is
      * {@code null}.
-     * @throws IllegalArgumentException if {@code count} is negative.
      */
-    public ElementType(final String name, final int count,
-            final List<Property> properties) {
+    public ElementType(final String name, final List<Property> properties) {
         if (name == null) {
             throw new NullPointerException("name must not be null.");
         }
         if (properties == null) {
             throw new NullPointerException("properties must not be null.");
         }
-        if (count < 0) {
-            throw new IllegalArgumentException("count must not be negative.");
-        }
         this.name = name;
-        this.count = count;
         this.properties = Collections.unmodifiableList(
                 new ArrayList<Property>(properties));
 
@@ -134,15 +125,12 @@ public final class ElementType {
     /**
      * Creates an instance.
      * @param name  Name of the element type.
-     * @param count Number of elements of this type.
      * @param properties Properties of the elements of this type.
      * @throws NullPointerException if {@code name} or {@code properties} is
      * {@code null}.
-     * @throws IllegalArgumentException if {@code count} is negative.
      */
-    public ElementType(final String name, final int count,
-            final Property... properties) {
-        this(name, count, Arrays.asList(properties));
+    public ElementType(final String name, final Property... properties) {
+        this(name, Arrays.asList(properties));
     }
 
     /**
@@ -165,14 +153,6 @@ public final class ElementType {
     }
 
     /**
-     * Number of elements of this type.
-     * @return Number of elements of this type.
-     */
-    public int getCount() {
-        return count;
-    }
-
-    /**
      * Gets the map that maps from property name to the index of that
      * property in the {@link #getProperties()} list.
      * @return Immutable map.
@@ -182,12 +162,47 @@ public final class ElementType {
     }
 
     /**
+     * Represents the result of parsing the header line.
+     */
+    static class HeaderEntry {
+
+        private final String name;
+        private final int count;
+
+        /**
+         * Creates an instance.
+         * @param name  Name of the element type.
+         * @param count Number of elements of this type.
+         */
+        public HeaderEntry(final String name, final int count) {
+            this.name = name;
+            this.count = count;
+        }
+
+        /**
+         * Gets the number of elements of the type.
+         * @return Number of elements.
+         */
+        public int getCount() {
+            return count;
+        }
+
+        /**
+         * Gets the name of the type.
+         * @return Name of the type.
+         */
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
      * Parses a header line starting an element description.
      * @param elementLine Header line.
      * @return ElementType without properties.
      * @throws IOException if the header line has an invalid format.
      */
-    static ElementType parse(final String elementLine) throws IOException {
+    static HeaderEntry parse(final String elementLine) throws IOException {
         if (!elementLine.startsWith("element ")) {
             throw new IOException("not an element: '"
                     + elementLine + "'");
@@ -209,12 +224,12 @@ public final class ElementType {
             throw new IOException("Invalid element entry. Not an integer: '"
                     + countStr + "'.");
         }
-        return new ElementType(name, count);
+        return new HeaderEntry(name, count);
     }
 
     @Override
     public String toString() {
-        return "element " + name + " " + count + " properties=" + properties;
+        return "element " + name + " properties=" + properties;
     }
 
     @Override
@@ -231,7 +246,6 @@ public final class ElementType {
         ElementType rhs = (ElementType) obj;
         EqualsBuilder builder = new EqualsBuilder();
         builder.append(name, rhs.name);
-        builder.append(count, rhs.count);
         builder.append(properties, rhs.properties);
         return builder.isEquals();
     }
@@ -240,7 +254,6 @@ public final class ElementType {
     public int hashCode() {
         HashCodeBuilder builder = new HashCodeBuilder();
         builder.append(name);
-        builder.append(count);
         builder.append(properties);
         return builder.toHashCode();
     }
