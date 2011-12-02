@@ -30,7 +30,7 @@ public interface PlyReader {
      * by {@link #nextElementReader()}.</p>
      * @return Immutable list with all element types.
      */
-    public List<ElementType> getElementTypes();
+    List<ElementType> getElementTypes();
 
     /**
      * Gets the number of elements for a given element type.
@@ -40,7 +40,7 @@ public interface PlyReader {
      * @throws IllegalArgumentException if there is no such type in this
      * file.
      */
-    public int getElementCount(final String elementType);
+    int getElementCount(final String elementType);
 
     /**
      * Returns the reader to read the first group of elements.
@@ -53,11 +53,11 @@ public interface PlyReader {
      * there are no more groups.
      * @throws IOException if an error occurs during reading.
      */
-    public ElementReader nextElementReader() throws IOException;
+    ElementReader nextElementReader() throws IOException;
 
     /**
      * Closes the file.
      * @throws IOException if closing fails. 
      */
-    public void close() throws IOException;
+    void close() throws IOException;
 }

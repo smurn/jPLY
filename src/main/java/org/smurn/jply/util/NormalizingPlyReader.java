@@ -85,7 +85,7 @@ public class NormalizingPlyReader implements PlyReader {
                     typeMap.get("face"), typeMap.get("face")) {
 
                 @Override
-                public ElementReader wrap(ElementReader reader) {
+                public ElementReader wrap(final ElementReader reader) {
                     return new TriangulatingFaceReader(reader);
                 }
             });
@@ -102,7 +102,7 @@ public class NormalizingPlyReader implements PlyReader {
                         unwrapped, withNormal) {
 
                     @Override
-                    public ElementReader wrap(ElementReader reader) {
+                    public ElementReader wrap(final ElementReader reader) {
                         return new TypeChangingElementReader(
                                 reader, withNormal);
                     }

@@ -39,20 +39,34 @@ public class WrappingPlyReader implements PlyReader {
     /**
      * Factory that can wrap element readers.
      */
-    public static abstract class WrapperFactory {
+    public abstract static class WrapperFactory {
 
         private final ElementType unwrappedType;
         private final ElementType wrappedType;
 
-        WrapperFactory(ElementType unwrappedType, ElementType wrappedType) {
+        /**
+         * Creates a wrapper factory;
+         * @param unwrappedType Type before wrapping.
+         * @param wrappedType Type after wrapping.
+         */
+        WrapperFactory(final ElementType unwrappedType,
+                final ElementType wrappedType) {
             this.unwrappedType = unwrappedType;
             this.wrappedType = wrappedType;
         }
 
+        /**
+         * Gets the type before wrapping.
+         * @return Type before wrapping.
+         */
         public final ElementType getUnwrappedType() {
             return unwrappedType;
         }
 
+        /**
+         * Gets the type after wrapping.
+         * @return Type after wrapping.
+         */
         public final ElementType getWrappedType() {
             return wrappedType;
         }
@@ -63,7 +77,7 @@ public class WrappingPlyReader implements PlyReader {
          * @return Wrapped element reader. May be the same reader if
          * no wrapping is intended.
          */
-        public abstract ElementReader wrap(ElementReader reader);
+        public abstract ElementReader wrap(final ElementReader reader);
     }
 
     /**

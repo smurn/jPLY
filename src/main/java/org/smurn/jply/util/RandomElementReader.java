@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public interface RandomElementReader extends ElementReader {
      * @throws IndexOutOfBoundsException if the index is out of range (negative
      * or greater-equal to the number of elements).
      */
-    public Element readElement(final int index) throws IOException;
+    Element readElement(final int index) throws IOException;
 
     /**
      * Creates a duplicate of this stream.
@@ -44,5 +44,5 @@ public interface RandomElementReader extends ElementReader {
      * <p>Both stream have a independent current position.</p>
      * @return Stream that can be closed without affecting this stream.
      */
-    public RandomElementReader duplicate();
+    RandomElementReader duplicate();
 }
