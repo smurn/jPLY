@@ -22,7 +22,7 @@ import org.smurn.jply.ElementReader;
 /**
  * Extends the element reader interface with random access functionality.
  */
-public interface RandomElementReader extends ElementReader {
+interface RandomElementReader extends ElementReader {
 
     /**
      * Reads an element at a specific position.

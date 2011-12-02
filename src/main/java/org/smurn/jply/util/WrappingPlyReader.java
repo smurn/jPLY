@@ -29,7 +29,7 @@ import org.smurn.jply.PlyReader;
 /**
  * PlyReader that can be used to wrap individual element readers.
  */
-public class WrappingPlyReader implements PlyReader {
+class WrappingPlyReader implements PlyReader {
 
     private final PlyReader reader;
     private final Map<String, WrapperFactory> unwrappedMap;
@@ -39,7 +39,7 @@ public class WrappingPlyReader implements PlyReader {
     /**
      * Factory that can wrap element readers.
      */
-    public abstract static class WrapperFactory {
+    abstract static class WrapperFactory {
 
         private final ElementType unwrappedType;
         private final ElementType wrappedType;

@@ -35,7 +35,7 @@ import org.smurn.jply.Property;
  * <p>Malformed vertices, where no normal can be generated (for example if
  * they are not used by any face), are assigned the normal vector (0,0,0).</p>
  */
-public class NormalGenerator {
+class NormalGenerator {
 
     private static final double EPSILON = 1E-6;
     private boolean counterClockwise = true;

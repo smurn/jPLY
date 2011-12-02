@@ -27,7 +27,7 @@ import org.smurn.jply.PlyReader;
  * Ply reader wrapper providing random order access to the element readers.
  * <p>This class caches read elements in memory.</p>
  */
-public class RandomPlyReader implements PlyReader {
+class RandomPlyReader implements PlyReader {
 
     private final PlyReader reader;
     private final Map<String, BufferedElementReader> buffer;

@@ -111,7 +111,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesslationMode.TRIANGLES, NormalMode.ADD_NORMALS_CCW);
+                TesselationMode.TRIANGLES, NormalMode.ADD_NORMALS_CCW);
 
         ElementReader actualVertexReader = target.nextElementReader();
         assertEquals(vertex0, actualVertexReader.readElement());
@@ -220,7 +220,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesslationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW);
+                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW);
 
         ElementReader actualVertexReader = target.nextElementReader();
 
@@ -305,7 +305,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesslationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW);
+                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW);
 
         ElementReader actualVertexReader = target.nextElementReader();
         assertEquals(vertex0, actualVertexReader.readElement());

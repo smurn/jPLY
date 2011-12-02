@@ -35,7 +35,7 @@ import org.smurn.jply.ElementType;
  * first be read by {@link #readElement()} before it can be accessed by
  * {@link #readElement(int)}. The two methods are independent of each other.</p>
  */
-public class BufferedElementReader implements RandomElementReader {
+class BufferedElementReader implements RandomElementReader {
 
     private final ElementReader reader;
     private List<Element> buffer = new ArrayList<Element>();
@@ -49,7 +49,7 @@ public class BufferedElementReader implements RandomElementReader {
      * be provided by this reader and in the same order.
      * @throws NullPointerException if {@code reader} is {@code null}.
      */
-    public BufferedElementReader(final ElementReader reader) {
+    BufferedElementReader(final ElementReader reader) {
         if (reader == null) {
             throw new NullPointerException("reader must not be null.");
         }

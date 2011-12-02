@@ -46,7 +46,7 @@ import org.smurn.jply.Property;
  * </li>
  * </ul>
  */
-public class TypeChangingElementReader implements ElementReader {
+class TypeChangingElementReader implements ElementReader {
 
     /** Source of the elements. */
     private final ElementReader reader;
@@ -66,7 +66,7 @@ public class TypeChangingElementReader implements ElementReader {
      * @throws NullPointerException if {@code reader} or {@code targetType}
      * is {@code null}.
      */
-    public TypeChangingElementReader(final ElementReader reader,
+    TypeChangingElementReader(final ElementReader reader,
             final ElementType targetType) {
         if (reader == null) {
             throw new NullPointerException("reader must not be null.");

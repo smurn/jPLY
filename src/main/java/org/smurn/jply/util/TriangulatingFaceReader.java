@@ -29,7 +29,7 @@ import org.smurn.jply.Property;
  * triangles up on the fly.</p>
  * <p>The winding order of the faces is not changed.</p>
  */
-public class TriangulatingFaceReader implements ElementReader {
+class TriangulatingFaceReader implements ElementReader {
 
     /** Source of the faces. */
     private final ElementReader reader;
@@ -49,7 +49,7 @@ public class TriangulatingFaceReader implements ElementReader {
      * @throws IllegalArgumentException if the reader does not read faces
      * or if the faces do not have a vertex_index list.
      */
-    public TriangulatingFaceReader(final ElementReader reader) {
+    TriangulatingFaceReader(final ElementReader reader) {
         if (reader == null) {
             throw new NullPointerException("reader must not be null.");
         }
