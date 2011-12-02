@@ -63,7 +63,11 @@ public class BufferedElementReader implements RandomElementReader {
 
     @Override
     public int getCount() {
-        return reader.getCount();
+        if (sourceClosed) {
+            return buffer.size();
+        } else {
+            return reader.getCount();
+        }
     }
 
     /**
