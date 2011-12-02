@@ -76,6 +76,7 @@ public class TypeChangingElementReaderTest {
                 reader, targetType);
 
         assertEquals(expected0, target.readElement());
+        assertNull(target.readElement());
     }
 
     @Test

@@ -116,6 +116,9 @@ public class TypeChangingElementReader implements ElementReader {
     @Override
     public Element readElement() throws IOException {
         Element source = reader.readElement();
+        if (source == null) {
+            return null;
+        }
         Element target = new Element(targetType);
 
         for (String property : sharedPropertiesNoList) {
