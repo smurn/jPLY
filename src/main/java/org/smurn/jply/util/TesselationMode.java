@@ -18,7 +18,7 @@ package org.smurn.jply.util;
 /**
  * Operation mode for triangle generation by {@link NormalizingPlyReader}.
  */
-public enum TesslationMode {
+public enum TesselationMode {
     
     /**
      * Does not change the faces.

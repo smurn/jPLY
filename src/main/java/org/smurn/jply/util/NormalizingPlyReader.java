@@ -43,17 +43,17 @@ public class NormalizingPlyReader implements PlyReader {
     /**
      * Creates an instance.
      * @param plyReader The reader providing the data to be normalized.
-     * @param tesslationMode    Tesslation operation.
+     * @param tesselationMode    Tesselation operation.
      * @param normalMode Normal vector generation operation.
      */
     public NormalizingPlyReader(final PlyReader plyReader,
-            final TesslationMode tesslationMode,
+            final TesselationMode tesselationMode,
             final NormalMode normalMode) {
 
         if (plyReader == null) {
             throw new NullPointerException("plyReader must not be null.");
         }
-        if (tesslationMode == null) {
+        if (tesselationMode == null) {
             throw new NullPointerException("tesslationMode must not be null.");
         }
         if (normalMode == null) {
@@ -80,7 +80,7 @@ public class NormalizingPlyReader implements PlyReader {
                 new LinkedList<WrappingPlyReader.WrapperFactory>();
 
         // Add the triangulation wrapper if required
-        if (tesslationMode == TesslationMode.TRIANGLES) {
+        if (tesselationMode == TesselationMode.TRIANGLES) {
             wrappers.add(new WrappingPlyReader.WrapperFactory(
                     typeMap.get("face"), typeMap.get("face")) {
 
