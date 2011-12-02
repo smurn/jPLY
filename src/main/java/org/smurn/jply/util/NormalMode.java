@@ -16,7 +16,7 @@
 package org.smurn.jply.util;
 
 /**
- *
+ * Operation mode for normal vector generation by {@link NormalizingPlyReader}.
  */
 public enum NormalMode {
 
@@ -25,13 +25,22 @@ public enum NormalMode {
      * the file.
      */
     DO_NOTHING,
-    /**
-     * Remove existing normals (if there are any).
-     */
-    REMOVE,
+
     /**
      * Do not change existing normals, but generate normals if the file does
      * not provide them.
+     * <p>Assumes that the faces are given in counter-clockwise order in a
+     * right-handed coordinate system (or clockwise order in a left-handed
+     * system).</p>
      */
-    ADD_MISSING_NORMALS
+    ADD_NORMALS_CCW,
+    
+    /**
+     * Do not change existing normals, but generate normals if the file does
+     * not provide them.
+     * <p>Assumes that the faces are given in clockwise order in a
+     * right-handed coordinate system (or counter-clockwise order in a
+     * left-handed).</p>
+     */
+    ADD_NORMALS_CW
 }
