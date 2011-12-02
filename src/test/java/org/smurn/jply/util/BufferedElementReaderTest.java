@@ -298,4 +298,91 @@ public class BufferedElementReaderTest {
         target.close();
         target.readElement(0);
     }
+
+    @Test
+    public void duplicateType() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+        when(reader.readElement()).thenReturn(null);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+        RandomElementReader dup = target.duplicate();
+
+        assertEquals(type, dup.getElementType());
+    }
+
+    @Test
+    public void duplicateReadsFromStart() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+
+        Element element0 = new Element(type);
+        element0.setInt("bar", 12);
+        Element element1 = new Element(type);
+        element1.setInt("bar", 12);
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+        when(reader.getCount()).thenReturn(2);
+        when(reader.readElement()).
+                thenReturn(element0).
+                thenReturn(element1).
+                thenReturn(null);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+        target.readElement();
+
+        RandomElementReader dup = target.duplicate();
+        assertEquals(element0, dup.readElement());
+        assertEquals(element1, dup.readElement());
+    }
+
+    @Test
+    public void duplicateRandom() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+
+        Element element0 = new Element(type);
+        element0.setInt("bar", 12);
+        Element element1 = new Element(type);
+        element1.setInt("bar", 12);
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+        when(reader.getCount()).thenReturn(2);
+        when(reader.readElement()).
+                thenReturn(element0).
+                thenReturn(element1).
+                thenReturn(null);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+        target.readElement();
+
+        RandomElementReader dup = target.duplicate();
+        assertEquals(element1, dup.readElement(1));
+        assertEquals(element0, dup.readElement(0));
+    }
+
+    @Test
+    public void duplicateClose() throws IOException {
+        ElementType type = new ElementType(
+                "foo",
+                new Property("bar", DataType.USHORT));
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(type);
+        when(reader.readElement()).
+                thenReturn(null);
+
+        BufferedElementReader target = new BufferedElementReader(reader);
+        RandomElementReader dup = target.duplicate();
+        dup.close();
+
+        verify(reader, never()).close();
+    }
 }

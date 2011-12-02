@@ -35,7 +35,7 @@ import org.smurn.jply.ElementType;
  * first be read by {@link #readElement()} before it can be accessed by
  * {@link #readElement(int)}. The two methods are independent of each other.</p>
  */
-public class BufferedElementReader implements ElementReader {
+public class BufferedElementReader implements RandomElementReader {
 
     private final ElementReader reader;
     private List<Element> buffer = new ArrayList<Element>();
@@ -78,6 +78,7 @@ public class BufferedElementReader implements ElementReader {
      * @throws IndexOutOfBoundsException if the index is out of range (negative
      * or greater-equal to the number of elements).
      */
+    @Override
     public Element readElement(final int index) throws IOException {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Index is negative.");
@@ -126,6 +127,59 @@ public class BufferedElementReader implements ElementReader {
      */
     public void reset() {
         nextElement = 0;
+    }
+
+    /**
+     * Creates a duplicate of this stream.
+     * <p>Closing the duplicate will not close this stream.</p>
+     * <p>Both stream have a independent current position.</p>
+     * @return Stream that can be closed without affecting this stream.
+     */
+    public RandomElementReader duplicate() {
+        if (closed) {
+            throw new IllegalStateException("Reader is closed.");
+        }
+
+        return new RandomElementReader() {
+
+            private boolean closed = false;
+            private int nextElement = 0;
+
+            @Override
+            public Element readElement(int index) throws IOException {
+                if (closed) {
+                    throw new IllegalStateException("Reader closed");
+                }
+                return BufferedElementReader.this.readElement(index);
+            }
+
+            @Override
+            public ElementType getElementType() {
+                return BufferedElementReader.this.getElementType();
+            }
+
+            @Override
+            public int getCount() {
+                return BufferedElementReader.this.getCount();
+            }
+
+            @Override
+            public Element readElement() throws IOException {
+
+                if (nextElement >= getCount()) {
+                    return null;
+                }
+                if (closed) {
+                    throw new IllegalStateException("Reader closed");
+                }
+                return BufferedElementReader.this.readElement(nextElement++);
+            }
+
+            @Override
+            public void close() throws IOException {
+                closed = true;
+            }
+        };
     }
 
     /**
