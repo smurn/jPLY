@@ -77,7 +77,7 @@ public class NormalGenerator {
      * named {@code vertex_index}.</li>
      * </ul>
      */
-    public void generateNormals(final BufferedElementReader vertexReader,
+    public void generateNormals(final RandomElementReader vertexReader,
             final ElementReader faceReader) throws IOException {
         if (vertexReader == null) {
             throw new NullPointerException("vertexReader must not be null.");
@@ -124,7 +124,6 @@ public class NormalGenerator {
             accumulateNormals(vertexReader, face);
         }
         // Phase 2: normalize the normal vectors
-        vertexReader.reset();
         for (Element vertex = vertexReader.readElement(); vertex != null;
                 vertex = vertexReader.readElement()) {
 
@@ -158,7 +157,7 @@ public class NormalGenerator {
      * @param face  Face to process.
      * @throws IOException if reading fails.
      */
-    private void accumulateNormals(final BufferedElementReader vertices,
+    private void accumulateNormals(final RandomElementReader vertices,
             final Element face) throws IOException {
         int[] indices = face.getIntList("vertex_index");
         for (int i = 0; i < indices.length; i++) {
@@ -172,10 +171,17 @@ public class NormalGenerator {
                 post = (i + indices.length - 1) % indices.length;
             }
 
-            Element centerVertex = vertices.readElement(indices[i]);
-            Element preVertex = vertices.readElement(indices[pre]);
-            Element postVertex = vertices.readElement(indices[post]);
-            accumulateNormal(centerVertex, preVertex, postVertex);
+            Element centerVertex;
+            Element preVertex;
+            Element postVertex;
+            try {
+                centerVertex = vertices.readElement(indices[i]);
+                preVertex = vertices.readElement(indices[pre]);
+                postVertex = vertices.readElement(indices[post]);
+                accumulateNormal(centerVertex, preVertex, postVertex);
+            } catch (IndexOutOfBoundsException e) {
+                // we ignore defects in the normals.
+            }
         }
     }
 
