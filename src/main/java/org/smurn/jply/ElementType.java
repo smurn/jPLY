@@ -102,6 +102,8 @@ public final class ElementType {
      * Must not be {@code null}.
      * @throws NullPointerException if {@code name} or {@code properties} is
      * {@code null}.
+     * @throws IllegalArgumentException if the properties don't have unique
+     * names.
      */
     public ElementType(final String name, final List<Property> properties) {
         if (name == null) {
@@ -120,6 +122,10 @@ public final class ElementType {
             propertyMapTmp.put(properties.get(i).getName(), i);
         }
         this.propertyMap = Collections.unmodifiableMap(propertyMapTmp);
+        if (propertyMap.size() != properties.size()){
+            throw new IllegalArgumentException(
+                    "properties must have unique names.");
+        }
     }
 
     /**
