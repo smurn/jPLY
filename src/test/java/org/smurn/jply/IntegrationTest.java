@@ -26,7 +26,7 @@ public class IntegrationTest {
     @Test
     public void cube() throws IOException {
 
-        PlyReader reader = new PlyReader(
+        PlyReaderImpl reader = new PlyReaderImpl(
                 ClassLoader.getSystemResourceAsStream("cube.ply"));
         ElementReader vertices = reader.nextElementReader();
 
