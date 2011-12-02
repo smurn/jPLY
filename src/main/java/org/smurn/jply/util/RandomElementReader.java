@@ -20,11 +20,10 @@ import org.smurn.jply.Element;
 import org.smurn.jply.ElementReader;
 
 /**
- *
- * @author stefan
+ * Extends the element reader interface with random access functionality.
  */
-public interface RandomElementReader extends ElementReader{
-    
+public interface RandomElementReader extends ElementReader {
+
     /**
      * Reads an element at a specific position.
      * <p>This method does not influence the order in which the elements
@@ -37,6 +36,13 @@ public interface RandomElementReader extends ElementReader{
      * @throws IndexOutOfBoundsException if the index is out of range (negative
      * or greater-equal to the number of elements).
      */
-    public Element readElement(final int index) throws IOException; 
-    
+    public Element readElement(final int index) throws IOException;
+
+    /**
+     * Creates a duplicate of this stream.
+     * <p>Closing the duplicate will not close this stream.</p>
+     * <p>Both stream have a independent current position.</p>
+     * @return Stream that can be closed without affecting this stream.
+     */
+    public RandomElementReader duplicate();
 }

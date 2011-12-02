@@ -183,6 +183,11 @@ public class BufferedElementReader implements RandomElementReader {
             public void close() throws IOException {
                 closed = true;
             }
+
+            @Override
+            public RandomElementReader duplicate() {
+                return BufferedElementReader.this.duplicate();
+            }
         };
     }
 
