@@ -15,7 +15,6 @@
  */
 package org.smurn.jply.util;
 
-import org.smurn.jply.ListProperty;
 import java.io.IOException;
 import java.util.Arrays;
 import org.smurn.jply.Element;

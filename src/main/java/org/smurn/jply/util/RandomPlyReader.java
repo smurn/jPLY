@@ -94,7 +94,7 @@ public class RandomPlyReader implements PlyReader {
         if (closed) {
             throw new IllegalStateException("Reader is closed.");
         }
-        if (nextType >= getElementTypes().size()){
+        if (nextType >= getElementTypes().size()) {
             return null;
         }
         String type = getElementTypes().get(nextType++).getName();
