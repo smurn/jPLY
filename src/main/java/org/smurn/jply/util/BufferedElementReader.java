@@ -139,6 +139,7 @@ class BufferedElementReader implements RandomElementReader {
      * <p>Both stream have a independent current position.</p>
      * @return Stream that can be closed without affecting this stream.
      */
+    @Override
     public RandomElementReader duplicate() {
         if (closed) {
             throw new IllegalStateException("Reader is closed.");
@@ -188,6 +189,11 @@ class BufferedElementReader implements RandomElementReader {
             public RandomElementReader duplicate() {
                 return BufferedElementReader.this.duplicate();
             }
+
+            @Override
+            public boolean isClosed() {
+                return closed;
+            }
         };
     }
 
@@ -222,5 +228,10 @@ class BufferedElementReader implements RandomElementReader {
         sourceClosed = true;
         buffer = null;  // let the GC have it.
         reader.close();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return closed;
     }
 }

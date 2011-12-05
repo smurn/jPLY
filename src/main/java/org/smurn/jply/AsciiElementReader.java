@@ -116,4 +116,9 @@ class AsciiElementReader implements ElementReader {
         }
         closed = true;
     }
+
+    @Override
+    public boolean isClosed() {
+        return closed;
+    }
 }

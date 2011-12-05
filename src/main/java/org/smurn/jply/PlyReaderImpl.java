@@ -242,9 +242,9 @@ public final class PlyReaderImpl implements PlyReader {
      */
     @Override
     public ElementReader nextElementReader() throws IOException {
-        if (currentReader != null) {
-            // TODO: throw exception if user did not properly close instead.
-            currentReader.close();
+        if (currentReader != null && !currentReader.isClosed()) {
+            throw new IllegalStateException(
+                    "Previous element stream needs to be closed first.");
         }
         currentReader = nextElementReaderInternal();
         return currentReader;
@@ -288,7 +288,8 @@ public final class PlyReaderImpl implements PlyReader {
                     throw new UnsupportedOperationException("PLY format "
                             + format + " is currently not supported.");
             }
-        } finally {
+        }
+        finally {
             nextElement++;
         }
     }

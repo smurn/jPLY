@@ -49,4 +49,10 @@ public interface ElementReader {
      * @throws IOException if closing the stream fails.
      */
     void close() throws IOException;
+
+    /**
+     * Checks if this stream is closed.
+     * @return {@code true} if the stream was closed already.
+     */
+    boolean isClosed();
 }

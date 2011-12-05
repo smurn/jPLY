@@ -116,4 +116,9 @@ class BinaryElementReader implements ElementReader {
     public void close() throws IOException {
         closed = true;
     }
+
+    @Override
+    public boolean isClosed() {
+        return closed;
+    }
 }

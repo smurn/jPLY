@@ -115,4 +115,9 @@ class TriangulatingFaceReader implements ElementReader {
         reader.close();
         closed = true;
     }
+
+    @Override
+    public boolean isClosed() {
+        return closed;
+    }
 }

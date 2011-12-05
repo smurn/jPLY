@@ -138,4 +138,9 @@ class TypeChangingElementReader implements ElementReader {
     public void close() throws IOException {
         reader.close();
     }
+
+    @Override
+    public boolean isClosed() {
+        return reader.isClosed();
+    }
 }
