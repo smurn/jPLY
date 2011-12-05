@@ -30,7 +30,7 @@ public interface ElementReader {
 
     /**
      * Total number of elements provided by this stream.
-     * <p>This is equivalent to {@code getElementType().getCount()}.</p>
+     * <p>This is equivalent to {@code PlyReader.getElementCount(...)}.</p>
      * @return Number of elements.
      */
     int getCount();

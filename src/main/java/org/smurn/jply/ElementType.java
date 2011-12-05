@@ -56,7 +56,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <dt>{@code edge}</dt>
  * <dd>Element type for line segments. The {@code edge} type should
  * have at least two (non-list) properties {@code vertex1} and {@code vertex2},
- * storing a (zero-based) index into the {@code vertex} elements.<br/>
+ * storing a (zero-based) index into the {@code vertex} elements defining
+ * the start and end point of the edge.<br/>
  * Color and material of an edge can be specified with the same properties
  * as used for vertices.</dd>
  * <dt>{@code material}</dt>
@@ -122,7 +123,7 @@ public final class ElementType {
             propertyMapTmp.put(properties.get(i).getName(), i);
         }
         this.propertyMap = Collections.unmodifiableMap(propertyMapTmp);
-        if (propertyMap.size() != properties.size()){
+        if (propertyMap.size() != properties.size()) {
             throw new IllegalArgumentException(
                     "properties must have unique names.");
         }
@@ -134,6 +135,8 @@ public final class ElementType {
      * @param properties Properties of the elements of this type.
      * @throws NullPointerException if {@code name} or {@code properties} is
      * {@code null}.
+     * @throws IllegalArgumentException if the properties don't have unique
+     * names.
      */
     public ElementType(final String name, final Property... properties) {
         this(name, Arrays.asList(properties));
@@ -152,7 +155,7 @@ public final class ElementType {
 
     /**
      * Gets all properties defined for this element type.
-     * @return Immutable list of properties.
+     * @return Immutable list of properties. I never {@code null}.
      */
     public List<Property> getProperties() {
         return properties;
