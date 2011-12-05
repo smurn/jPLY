@@ -16,7 +16,7 @@
 package org.smurn.jply.util;
 
 /**
- *
+ * Operation modes for texture coordinate generation.
  */
 public enum TextureMode {
 
@@ -25,10 +25,6 @@ public enum TextureMode {
      * coordinates are missing in the file.
      */
     DO_NOTHING,
-    /**
-     * Remove existing texture coordinates (if there are any).
-     */
-    REMOVE,
     /**
      * Generate texture coordinates based on the vertex's x (u) and y (v)
      * coordinates.
@@ -55,5 +51,5 @@ public enum TextureMode {
      * <p>If there are existing coordinates in the file this mode does
      * nothing.</p>
      */
-    YZ,
+    YZ
 }

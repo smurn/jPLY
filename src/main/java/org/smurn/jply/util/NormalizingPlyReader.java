@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.smurn.jply.DataType;
+import org.smurn.jply.Element;
 import org.smurn.jply.ElementReader;
 import org.smurn.jply.ElementType;
 import org.smurn.jply.PlyReader;
@@ -37,6 +38,7 @@ public class NormalizingPlyReader implements PlyReader {
 
     private final RandomPlyReader plyReader;
     private final NormalMode normalMode;
+    private final TexGenStrategy texGenStrategy;
     private final boolean generateNormals;
     private final List<ElementType> elementTypes;
 
@@ -48,7 +50,7 @@ public class NormalizingPlyReader implements PlyReader {
      */
     public NormalizingPlyReader(final PlyReader plyReader,
             final TesselationMode tesselationMode,
-            final NormalMode normalMode) {
+            final NormalMode normalMode, final TextureMode textureMode) {
 
         if (plyReader == null) {
             throw new NullPointerException("plyReader must not be null.");
@@ -58,6 +60,28 @@ public class NormalizingPlyReader implements PlyReader {
         }
         if (normalMode == null) {
             throw new NullPointerException("normalMode must not be null.");
+        }
+        if (textureMode == null) {
+            throw new NullPointerException("textureMode must not be null.");
+        }
+
+        TexGenStrategy texGenStrategyTmp;
+        switch (textureMode) {
+            case DO_NOTHING:
+                texGenStrategyTmp = null;
+                break;
+            case XY:
+                texGenStrategyTmp = new PlanarTexGenStrategy(Axis.X, Axis.Y);
+                break;
+            case XZ:
+                texGenStrategyTmp = new PlanarTexGenStrategy(Axis.X, Axis.Z);
+                break;
+            case YZ:
+                texGenStrategyTmp = new PlanarTexGenStrategy(Axis.Y, Axis.Z);
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unsupported texture generation mode.");
         }
 
         // Make a map to find the element types by name
@@ -71,7 +95,10 @@ public class NormalizingPlyReader implements PlyReader {
                     "PLY file contains no vertex data.");
         }
 
-        if (!typeMap.containsKey("face")) {
+        if (!typeMap.containsKey("face")
+                && ( tesselationMode != TesselationMode.PASS_THROUGH
+                || normalMode != NormalMode.DO_NOTHING )) {
+            
             throw new IllegalArgumentException(
                     "PLY file contains no face data.");
         }
@@ -91,30 +118,43 @@ public class NormalizingPlyReader implements PlyReader {
             });
         }
 
-        // Add the type changer wrapper if we need to add vertex properties
+        // Build the new vertex element type
+        ElementType unwrapped = typeMap.get("vertex");
+        ElementType maybeWithNormal;
         if (normalMode != NormalMode.DO_NOTHING) {
-            final ElementType unwrapped = typeMap.get("vertex");
-            final ElementType withNormal = addNormalProps(unwrapped);
-            if (!unwrapped.equals(withNormal)) {
-                generateNormals = true;
-                typeMap.put("vertex", withNormal);
-                wrappers.add(new WrappingPlyReader.WrapperFactory(
-                        unwrapped, withNormal) {
-
-                    @Override
-                    public ElementReader wrap(final ElementReader reader) {
-                        return new TypeChangingElementReader(
-                                reader, withNormal);
-                    }
-                });
-            } else {
-                generateNormals = false;
+            maybeWithNormal = addNormalProps(unwrapped);
+            generateNormals = !maybeWithNormal.equals(unwrapped);
+        } else {
+            maybeWithNormal = unwrapped;
+            generateNormals = false;
+        }
+        ElementType maybeWithNormalTexture;
+        if (texGenStrategyTmp != null) {
+            maybeWithNormalTexture = addTextureProps(maybeWithNormal);
+            if (maybeWithNormalTexture.equals(maybeWithNormal)) {
+                texGenStrategyTmp = null;
             }
         } else {
-            generateNormals = false;
+            maybeWithNormalTexture = maybeWithNormal;
+        }
+        final ElementType wrapped = maybeWithNormalTexture;
+
+        // Add a wrapper around the source to convert the vertex element type.
+        if (!unwrapped.equals(wrapped)) {
+            typeMap.put("vertex", wrapped);
+            wrappers.add(new WrappingPlyReader.WrapperFactory(
+                    unwrapped, wrapped) {
+
+                @Override
+                public ElementReader wrap(final ElementReader reader) {
+                    return new TypeChangingElementReader(
+                            reader, wrapped);
+                }
+            });
         }
 
         this.normalMode = normalMode;
+        this.texGenStrategy = texGenStrategyTmp;
         this.plyReader = new RandomPlyReader(
                 new WrappingPlyReader(plyReader, wrappers));
 
@@ -165,6 +205,37 @@ public class NormalizingPlyReader implements PlyReader {
     }
 
     /**
+     * Adds properties for u and v if they don't already exist.
+     * @param sourceType Source vertex type.
+     * @return Vertex type guaranteed to have u and v.
+     */
+    private static ElementType addTextureProps(final ElementType sourceType) {
+        List<Property> properties = new ArrayList<Property>();
+        boolean foundU = false;
+        boolean foundV = false;
+
+        for (Property property : sourceType.getProperties()) {
+            if (property.getName().equals("u")) {
+                foundU = true;
+            }
+            if (property.getName().equals("v")) {
+                foundV = true;
+            }
+            properties.add(property);
+        }
+        if (foundU && foundV) {
+            return sourceType;
+        }
+        if (!foundU) {
+            properties.add(new Property("u", DataType.DOUBLE));
+        }
+        if (!foundV) {
+            properties.add(new Property("v", DataType.DOUBLE));
+        }
+        return new ElementType("vertex", properties);
+    }
+
+    /**
      * Gets all element types in this PLY file.
      * <p>The order of the list
      * is the same in which the corresponding readers are returned
@@ -203,9 +274,12 @@ public class NormalizingPlyReader implements PlyReader {
     @Override
     public ElementReader nextElementReader() throws IOException {
         RandomElementReader reader = plyReader.nextElementReader();
-        if (generateNormals
-                && reader.getElementType().getName().equals("vertex")) {
 
+        if (!reader.getElementType().getName().equals("vertex")) {
+            return reader;
+        }
+
+        if (generateNormals) {
             RandomElementReader faces = plyReader.getElementReader("face");
 
             NormalGenerator generator = new NormalGenerator();
@@ -214,6 +288,27 @@ public class NormalizingPlyReader implements PlyReader {
             }
 
             generator.generateNormals(reader.duplicate(), faces);
+        }
+        RectBounds bounds = new RectBounds();
+        if (texGenStrategy != null) {
+
+            // Find the bounds of the model
+            ElementReader boundsReader = reader.duplicate();
+            for (Element element = boundsReader.readElement();
+                    element != null; element = boundsReader.readElement()) {
+                bounds.addPoint(
+                        element.getDouble("x"),
+                        element.getDouble("y"),
+                        element.getDouble("z"));
+            }
+
+            // Generate the texture coordinates.
+            ElementReader texReader = reader.duplicate();
+            for (Element element = texReader.readElement();
+                    element != null; element = texReader.readElement()) {
+
+                texGenStrategy.generateCoordinates(element, bounds);
+            }
         }
         return reader;
     }

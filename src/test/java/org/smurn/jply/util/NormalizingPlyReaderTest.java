@@ -34,6 +34,70 @@ import static org.junit.Assert.*;
 public class NormalizingPlyReaderTest {
 
     @Test
+    public void xy() throws IOException {
+
+        ElementType inType = new ElementType(
+                "vertex",
+                new Property("x", DataType.DOUBLE),
+                new Property("y", DataType.DOUBLE),
+                new Property("z", DataType.DOUBLE));
+
+        Element vMin = new Element(inType);
+        vMin.setDouble("x", 10);
+        vMin.setDouble("y", 100);
+        vMin.setDouble("z", 1000);
+        
+        Element vMax = new Element(inType);
+        vMax.setDouble("x", 20);
+        vMax.setDouble("y", 200);
+        vMax.setDouble("z", 2000);
+        
+        Element element = new Element(inType);
+        element.setDouble("x", 12);
+        element.setDouble("y", 130);
+        element.setDouble("z", 1400);
+
+        ElementType outType = new ElementType(
+                "vertex",
+                new Property("x", DataType.DOUBLE),
+                new Property("y", DataType.DOUBLE),
+                new Property("z", DataType.DOUBLE),
+                new Property("u", DataType.DOUBLE),
+                new Property("v", DataType.DOUBLE));
+        
+        Element expected = new Element(outType);
+        expected.setDouble("x", 12);
+        expected.setDouble("y", 130);
+        expected.setDouble("z", 1400);
+        expected.setDouble("u", 0.2);
+        expected.setDouble("v", 0.3);
+
+        RectBounds bounds = new RectBounds(10, 20, 100, 200, 1000, 2000);
+
+        ElementReader vertexReader = mock(ElementReader.class);
+        when(vertexReader.getElementType()).thenReturn(inType);
+        when(vertexReader.readElement()).
+                thenReturn(element).
+                thenReturn(vMin).
+                thenReturn(vMax).
+                thenReturn(null);
+
+        PlyReader plyReader = mock(PlyReader.class);
+        when(plyReader.nextElementReader()).
+                thenReturn(vertexReader).thenReturn(null);
+        when(plyReader.getElementTypes()).
+                thenReturn(Arrays.asList(inType));
+
+        PlyReader target = new NormalizingPlyReader(
+                plyReader,
+                TesselationMode.PASS_THROUGH, NormalMode.DO_NOTHING, TextureMode.XY);
+
+        Element actual = target.nextElementReader().readElement();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void readQuad() throws IOException {
 
         ElementType vertexType = new ElementType(
@@ -83,7 +147,7 @@ public class NormalizingPlyReaderTest {
 
         Element expectedFace0 = new Element(faceType);
         expectedFace0.setIntList("vertex_index", new int[]{0, 1, 2});
-        
+
         Element expectedFace1 = new Element(faceType);
         expectedFace1.setIntList("vertex_index", new int[]{0, 2, 3});
 
@@ -111,7 +175,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.TRIANGLES, NormalMode.ADD_NORMALS_CCW);
+                TesselationMode.TRIANGLES, NormalMode.ADD_NORMALS_CCW, TextureMode.DO_NOTHING);
 
         ElementReader actualVertexReader = target.nextElementReader();
         assertEquals(vertex0, actualVertexReader.readElement());
@@ -220,7 +284,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW);
+                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW, TextureMode.DO_NOTHING);
 
         ElementReader actualVertexReader = target.nextElementReader();
 
@@ -305,7 +369,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW);
+                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW, TextureMode.DO_NOTHING);
 
         ElementReader actualVertexReader = target.nextElementReader();
         assertEquals(vertex0, actualVertexReader.readElement());
