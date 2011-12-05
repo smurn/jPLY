@@ -20,7 +20,7 @@ import org.smurn.jply.Element;
 /**
  * Interface for strategies to generate texture coordinates.
  */
-public interface TexGenStrategy {
+interface TexGenStrategy {
 
     /**
      * Generates the texture coordinates.

@@ -18,7 +18,7 @@ package org.smurn.jply.util;
 /**
  * Three-dimensional, axis-oriented rectangular bounds.
  */
-public class RectBounds {
+class RectBounds {
 
     private double minX;
     private double maxX;
@@ -36,7 +36,7 @@ public class RectBounds {
      * @param minZ Minimum value.
      * @param maxZ Maximum value.
      */
-    public RectBounds(final double minX, final double maxX, final double minY,
+    RectBounds(final double minX, final double maxX, final double minY,
             final double maxY, final double minZ, final double maxZ) {
         this.minX = minX;
         this.maxX = maxX;
@@ -50,7 +50,7 @@ public class RectBounds {
      * Creates an instance with initially invalid bounds ready to be used
      * with {@link #addPoint(double, double, double)}.
      */
-    public RectBounds() {
+    RectBounds() {
         this.minX = Double.POSITIVE_INFINITY;
         this.maxX = Double.NEGATIVE_INFINITY;
         this.minY = Double.POSITIVE_INFINITY;
