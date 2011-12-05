@@ -17,6 +17,7 @@ package org.smurn.jply;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.io.Reader;
 
 /**
@@ -29,13 +30,13 @@ import java.io.Reader;
  */
 class UnbufferedASCIIReader extends Reader {
 
-    private final InputStream stream;
+    private final PushbackInputStream stream;
 
     /**
      * Creates an instance.
      * @param stream Stream to read from.
      */
-    public UnbufferedASCIIReader(final InputStream stream) {
+    public UnbufferedASCIIReader(final PushbackInputStream stream) {
         if (stream == null) {
             throw new NullPointerException();
         }
@@ -56,6 +57,19 @@ class UnbufferedASCIIReader extends Reader {
                 break;
             }
             if (c == '\n') {
+                // if possible consume another '\r'
+                int peek = stream.read();
+                if (peek != '\r' && peek >= 0){
+                    stream.unread(peek);
+                }
+                break;
+            }
+            if (c == '\r') {
+                // if possible consume another '\n'
+                int peek = stream.read();
+                if (peek != '\n' && peek >= 0){
+                    stream.unread(peek);
+                }
                 break;
             }
             str.append((char) c);

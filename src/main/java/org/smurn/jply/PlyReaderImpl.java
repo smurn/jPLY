@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PushbackInputStream;
 import java.nio.ByteOrder;
 import java.nio.channels.Channels;
 import java.nio.charset.Charset;
@@ -45,7 +46,7 @@ public final class PlyReaderImpl implements PlyReader {
     /** Stream to read the data from. {@code null} if the format is ASCII. */
     private BinaryPlyInputStream binaryStream;
     /** Original input stream. */
-    private final InputStream inputStream;
+    private final PushbackInputStream inputStream;
     /** Stream to read the data from. {@code null} if the format is binary. */
     private BufferedReader asciiReader;
     /** Index of the next element group to return. */
@@ -66,9 +67,11 @@ public final class PlyReaderImpl implements PlyReader {
             throw new NullPointerException("file must not be null.");
         }
         if (file.getName().endsWith(".gz")) {
-            this.inputStream = new GZIPInputStream(new FileInputStream(file));
+            this.inputStream = new PushbackInputStream(
+                    new GZIPInputStream(new FileInputStream(file)));
         } else {
-            this.inputStream = new FileInputStream(file);
+            this.inputStream = new PushbackInputStream(
+                    new FileInputStream(file));
         }
         readHeader(this.inputStream);
     }
@@ -93,8 +96,8 @@ public final class PlyReaderImpl implements PlyReader {
         if (stream == null) {
             throw new NullPointerException("stream must not be null.");
         }
-        this.inputStream = stream;
-        readHeader(stream);
+        this.inputStream = new PushbackInputStream(stream);
+        readHeader(this.inputStream);
     }
 
     /**
@@ -102,7 +105,8 @@ public final class PlyReaderImpl implements PlyReader {
      * @param stream Stream to read the file from.
      * @throws IOException if an error occurs during reading.
      */
-    private void readHeader(final InputStream stream) throws IOException {
+    private void readHeader(final PushbackInputStream stream)
+            throws IOException {
         UnbufferedASCIIReader hdrReader = new UnbufferedASCIIReader(stream);
         String magic = hdrReader.readLine();
         if (!"ply".equals(magic)) {
