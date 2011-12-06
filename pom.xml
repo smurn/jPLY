@@ -13,5 +13,6 @@
     <modules>
         <module>jply</module>
         <module>consoledemo</module>
+    <module>LWJGLDemo</module>
   </modules>
 </project>
