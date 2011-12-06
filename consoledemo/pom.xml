@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>jply-package</artifactId>
+        <groupId>org.smurn</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.smurn.jply</groupId>
+    <artifactId>consoledemo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>ConsoleDemo</name>
+   
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>/LICENSE.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:smurn/jply.git</connection>
+        <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
+        <url>scm:git:https://github.com/smurn/jply/tree/master</url>
+    </scm>
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/smurn/jply/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Hudson</system>
+        <url>http://greebo.smurn.org:8080/hudson/job/jply</url>
+    </ciManagement>
+    <developers>
+        <developer>
+            <name>Stefan C. Mueller</name>
+        </developer>
+    </developers>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.hint.license>apache20</netbeans.hint.license>
+        <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
+    </properties>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+   
+    <dependencies>
+        <dependency>
+            <groupId>org.smurn</groupId>
+            <artifactId>jply</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
