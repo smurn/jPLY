@@ -113,6 +113,7 @@ class AsciiElementReader implements ElementReader {
             if (line == null) {
                 throw new IOException("Unexpected end of file.");
             }
+            nextRow++;
         }
         closed = true;
     }
