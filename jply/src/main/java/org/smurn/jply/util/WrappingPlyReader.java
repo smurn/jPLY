@@ -143,7 +143,7 @@ class WrappingPlyReader implements PlyReader {
             throw new NullPointerException("elementType must not be null.");
         }
         if (!wrappedMap.containsKey(elementType)) {
-            throw new IllegalArgumentException("No such type found.");
+            return reader.getElementCount(elementType);
         }
 
         ElementType unwrapped = wrappedMap.get(elementType).getUnwrappedType();
