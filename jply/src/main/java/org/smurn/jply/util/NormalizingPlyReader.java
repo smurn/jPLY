@@ -98,7 +98,7 @@ public class NormalizingPlyReader implements PlyReader {
         if (!typeMap.containsKey("face")
                 && ( tesselationMode != TesselationMode.PASS_THROUGH
                 || normalMode != NormalMode.DO_NOTHING )) {
-            
+
             throw new IllegalArgumentException(
                     "PLY file contains no face data.");
         }
@@ -274,6 +274,9 @@ public class NormalizingPlyReader implements PlyReader {
     @Override
     public ElementReader nextElementReader() throws IOException {
         RandomElementReader reader = plyReader.nextElementReader();
+        if (reader == null) {
+            return reader;
+        }
 
         if (!reader.getElementType().getName().equals("vertex")) {
             return reader;
