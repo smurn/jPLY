@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.smurn.jply.ElementReader;
 import org.smurn.jply.ElementType;
 import org.smurn.jply.PlyReader;
@@ -56,7 +58,11 @@ class RandomPlyReader implements PlyReader {
 
     @Override
     public int getElementCount(final String elementType) {
-        return reader.getElementCount(elementType);
+        try {
+            return getElementReader(elementType).getCount();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
