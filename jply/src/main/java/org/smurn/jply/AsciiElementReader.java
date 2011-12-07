@@ -73,6 +73,7 @@ class AsciiElementReader implements ElementReader {
         if (line == null) {
             throw new IOException("Unexpected end of file.");
         }
+        line = line.trim();
         String[] parts = line.split(" +");
         double[] numbers = new double[parts.length];
         for (int i = 0; i < parts.length; i++) {
