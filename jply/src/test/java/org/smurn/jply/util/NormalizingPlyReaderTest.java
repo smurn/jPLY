@@ -34,6 +34,57 @@ import static org.junit.Assert.*;
 public class NormalizingPlyReaderTest {
 
     @Test
+    public void renameVertexIndex() throws IOException {
+
+        ElementType vertexType = new ElementType(
+                "vertex",
+                new Property("x", DataType.DOUBLE),
+                new Property("y", DataType.DOUBLE),
+                new Property("z", DataType.DOUBLE));
+
+        ElementType faceType = new ElementType(
+                "face",
+                new ListProperty(DataType.UCHAR, "vertex_indices", DataType.INT));
+
+        Element face0 = new Element(faceType);
+        face0.setIntList("vertex_indices", new int[]{0, 1, 2, 3});
+
+        ElementReader vertexReader = mock(ElementReader.class);
+        when(vertexReader.getElementType()).thenReturn(vertexType);
+        when(vertexReader.readElement()).thenReturn(null);
+
+        ElementReader faceReader = mock(ElementReader.class);
+        when(faceReader.getElementType()).thenReturn(faceType);
+        when(faceReader.readElement()).
+                thenReturn(face0).
+                thenReturn(null);
+
+        PlyReader plyReader = mock(PlyReader.class);
+        when(plyReader.nextElementReader()).
+                thenReturn(vertexReader).thenReturn(faceReader);
+        when(plyReader.getElementTypes()).
+                thenReturn(Arrays.asList(vertexType, faceType));
+
+        PlyReader target = new NormalizingPlyReader(
+                plyReader,
+                TesselationMode.PASS_THROUGH, NormalMode.DO_NOTHING, TextureMode.DO_NOTHING);
+
+        ElementType faceTypeExpected = new ElementType(
+                "face",
+                new ListProperty(DataType.UCHAR, "vertex_index", DataType.INT));
+
+        Element face0Expected = new Element(faceTypeExpected);
+        face0Expected.setIntList("vertex_index", new int[]{0, 1, 2, 3});
+
+        assertEquals(faceTypeExpected, target.getElementTypes().get(1));
+        target.nextElementReader().close();
+        ElementReader reader = target.nextElementReader();
+        assertEquals(faceTypeExpected, reader.getElementType());
+
+        assertEquals(face0Expected, reader.readElement());
+    }
+
+    @Test
     public void xy() throws IOException {
 
         ElementType inType = new ElementType(
@@ -46,12 +97,12 @@ public class NormalizingPlyReaderTest {
         vMin.setDouble("x", 10);
         vMin.setDouble("y", 100);
         vMin.setDouble("z", 1000);
-        
+
         Element vMax = new Element(inType);
         vMax.setDouble("x", 20);
         vMax.setDouble("y", 200);
         vMax.setDouble("z", 2000);
-        
+
         Element element = new Element(inType);
         element.setDouble("x", 12);
         element.setDouble("y", 130);
@@ -64,7 +115,7 @@ public class NormalizingPlyReaderTest {
                 new Property("z", DataType.DOUBLE),
                 new Property("u", DataType.DOUBLE),
                 new Property("v", DataType.DOUBLE));
-        
+
         Element expected = new Element(outType);
         expected.setDouble("x", 12);
         expected.setDouble("y", 130);

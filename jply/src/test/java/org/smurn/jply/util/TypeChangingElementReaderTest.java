@@ -15,6 +15,8 @@
  */
 package org.smurn.jply.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.smurn.jply.Property;
 import java.io.IOException;
 import org.smurn.jply.Element;
@@ -79,6 +81,36 @@ public class TypeChangingElementReaderTest {
         assertNull(target.readElement());
     }
 
+        @Test
+    public void renameProperty() throws IOException {
+        ElementType sourceType = new ElementType(
+                "foo",
+                new Property("bar", DataType.INT));
+
+        ElementType targetType = new ElementType(
+                "fooNEW",
+                new Property("barNew", DataType.INT));
+
+        Element element0 = new Element(sourceType);
+        element0.setInt("bar", 42);
+        Element expected0 = new Element(targetType);
+        expected0.setInt("barNew", 42);
+
+        ElementReader reader = mock(ElementReader.class);
+        when(reader.getElementType()).thenReturn(sourceType);
+        when(reader.readElement()).
+                thenReturn(element0).
+                thenReturn(null);
+
+        Map<String,String> sourceNames = new HashMap<String,String>();
+        sourceNames.put("barNew", "bar");
+        
+        TypeChangingElementReader target = new TypeChangingElementReader(
+                reader, targetType, sourceNames);
+
+        assertEquals(expected0, target.readElement());
+    }
+    
     @Test
     public void changeDataType() throws IOException {
         ElementType sourceType = new ElementType(

@@ -26,6 +26,7 @@ import org.smurn.jply.DataType;
 import org.smurn.jply.Element;
 import org.smurn.jply.ElementReader;
 import org.smurn.jply.ElementType;
+import org.smurn.jply.ListProperty;
 import org.smurn.jply.PlyReader;
 import org.smurn.jply.Property;
 
@@ -37,9 +38,13 @@ import org.smurn.jply.Property;
 public class NormalizingPlyReader implements PlyReader {
 
     private final RandomPlyReader plyReader;
+
     private final NormalMode normalMode;
+
     private final TexGenStrategy texGenStrategy;
+
     private final boolean generateNormals;
+
     private final List<ElementType> elementTypes;
 
     /**
@@ -96,24 +101,67 @@ public class NormalizingPlyReader implements PlyReader {
         }
 
         if (!typeMap.containsKey("face")
-                && ( tesselationMode != TesselationMode.PASS_THROUGH
-                || normalMode != NormalMode.DO_NOTHING )) {
+                && (tesselationMode != TesselationMode.PASS_THROUGH
+                || normalMode != NormalMode.DO_NOTHING)) {
 
             throw new IllegalArgumentException(
                     "PLY file contains no face data.");
         }
 
+        // find out if we need to rename the vertex_index property of face.
+        final ElementType renamedFaceType;
+        final Map<String,String> sourceNameMap = new HashMap<String, String>();
+        if (typeMap.containsKey("face")) {
+            List<Property> properties = typeMap.get("face").getProperties();
+            List<Property> newProperties = new ArrayList<Property>();
+            boolean renameVertexIndex = false;
+            for (Property property : properties) {
+                if (property.getName().equals("vertex_indices")) {
+                    renameVertexIndex = true;
+                    newProperties.add(
+                            new ListProperty(
+                            ((ListProperty) property).getCountType(),
+                            "vertex_index",
+                            property.getType()));
+                    sourceNameMap.put("vertex_index", "vertex_indices");
+                } else {
+                    newProperties.add(property);
+                }
+            }
+            if (renameVertexIndex) {
+                renamedFaceType = new ElementType("face", newProperties);
+                typeMap.put("face", renamedFaceType);
+            } else {
+                renamedFaceType = null;
+            }
+        } else {
+            renamedFaceType = null;
+        }
+
         List<WrappingPlyReader.WrapperFactory> wrappers =
                 new LinkedList<WrappingPlyReader.WrapperFactory>();
 
-        // Add the triangulation wrapper if required
-        if (tesselationMode == TesselationMode.TRIANGLES) {
+        // Add the face wrappers if required
+        if (tesselationMode == TesselationMode.TRIANGLES
+                || renamedFaceType != null) {
+
+            ElementType newFaceType = renamedFaceType != null
+                    ? renamedFaceType : typeMap.get("face");
+
             wrappers.add(new WrappingPlyReader.WrapperFactory(
-                    typeMap.get("face"), typeMap.get("face")) {
+                    typeMap.get("face"), newFaceType) {
 
                 @Override
                 public ElementReader wrap(final ElementReader reader) {
-                    return new TriangulatingFaceReader(reader);
+                    ElementReader wrapped = reader;
+                    if (renamedFaceType != null) {
+                        wrapped = new TypeChangingElementReader(
+                                wrapped, renamedFaceType, sourceNameMap);
+                    }
+                    if (tesselationMode == TesselationMode.TRIANGLES) {
+                        wrapped = new TriangulatingFaceReader(wrapped);
+                    }
+                    return wrapped;
                 }
             });
         }
