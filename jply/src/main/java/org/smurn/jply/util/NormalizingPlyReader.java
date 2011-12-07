@@ -56,6 +56,23 @@ public class NormalizingPlyReader implements PlyReader {
     public NormalizingPlyReader(final PlyReader plyReader,
             final TesselationMode tesselationMode,
             final NormalMode normalMode, final TextureMode textureMode) {
+        this(plyReader, tesselationMode, normalMode, textureMode,
+                Axis.X, Axis.Y, Axis.Z);
+    }
+
+    /**
+     * Creates an instance.
+     * @param plyReader The reader providing the data to be normalized.
+     * @param tesselationMode    Tesselation operation.
+     * @param normalMode Normal vector generation operation.
+     * @param x The axis in the source to map to the x in the normalized data.
+     * @param y The axis in the source to map to the y in the normalized data.
+     * @param z The axis in the source to map to the z in the normalized data.
+     */
+    public NormalizingPlyReader(final PlyReader plyReader,
+            final TesselationMode tesselationMode,
+            final NormalMode normalMode, final TextureMode textureMode,
+            final Axis x, final Axis y, final Axis z) {
 
         if (plyReader == null) {
             throw new NullPointerException("plyReader must not be null.");
@@ -68,6 +85,15 @@ public class NormalizingPlyReader implements PlyReader {
         }
         if (textureMode == null) {
             throw new NullPointerException("textureMode must not be null.");
+        }
+        if (x == null) {
+            throw new NullPointerException("x must not be null.");
+        }
+        if (y == null) {
+            throw new NullPointerException("y must not be null.");
+        }
+        if (z == null) {
+            throw new NullPointerException("z must not be null.");
         }
 
         TexGenStrategy texGenStrategyTmp;
@@ -110,7 +136,7 @@ public class NormalizingPlyReader implements PlyReader {
 
         // find out if we need to rename the vertex_index property of face.
         final ElementType renamedFaceType;
-        final Map<String,String> sourceNameMap = new HashMap<String, String>();
+        final Map<String, String> sourceNameMap = new HashMap<String, String>();
         if (typeMap.containsKey("face")) {
             List<Property> properties = typeMap.get("face").getProperties();
             List<Property> newProperties = new ArrayList<Property>();
@@ -167,13 +193,13 @@ public class NormalizingPlyReader implements PlyReader {
         }
 
         // Build the new vertex element type
-        ElementType unwrapped = typeMap.get("vertex");
+        final ElementType unwrappedVertexType = typeMap.get("vertex");
         ElementType maybeWithNormal;
         if (normalMode != NormalMode.DO_NOTHING) {
-            maybeWithNormal = addNormalProps(unwrapped);
-            generateNormals = !maybeWithNormal.equals(unwrapped);
+            maybeWithNormal = addNormalProps(unwrappedVertexType);
+            generateNormals = !maybeWithNormal.equals(unwrappedVertexType);
         } else {
-            maybeWithNormal = unwrapped;
+            maybeWithNormal = unwrappedVertexType;
             generateNormals = false;
         }
         ElementType maybeWithNormalTexture;
@@ -185,18 +211,29 @@ public class NormalizingPlyReader implements PlyReader {
         } else {
             maybeWithNormalTexture = maybeWithNormal;
         }
-        final ElementType wrapped = maybeWithNormalTexture;
+        final ElementType wrappedVertexType = maybeWithNormalTexture;
+
+        // Do we need to shuffle the axes?
+        final boolean shuffleAxes = x != Axis.X || y != Axis.Y || z != Axis.Z;
 
         // Add a wrapper around the source to convert the vertex element type.
-        if (!unwrapped.equals(wrapped)) {
-            typeMap.put("vertex", wrapped);
+        if (!unwrappedVertexType.equals(wrappedVertexType) || shuffleAxes) {
+            typeMap.put("vertex", wrappedVertexType);
             wrappers.add(new WrappingPlyReader.WrapperFactory(
-                    unwrapped, wrapped) {
+                    unwrappedVertexType, wrappedVertexType) {
 
                 @Override
                 public ElementReader wrap(final ElementReader reader) {
-                    return new TypeChangingElementReader(
-                            reader, wrapped);
+                    ElementReader newReader = reader;
+                    if (shuffleAxes) {
+                        newReader = new AxisShufflingVertexReader(
+                                newReader, x, y, z);
+                    }
+                    if (!unwrappedVertexType.equals(wrappedVertexType)) {
+                        newReader = new TypeChangingElementReader(
+                                reader, wrappedVertexType);
+                    }
+                    return newReader;
                 }
             });
         }

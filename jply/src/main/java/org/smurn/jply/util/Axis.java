@@ -16,14 +16,21 @@
 package org.smurn.jply.util;
 
 /**
- * Defines one of the three axis.
+ * Defines one of the three axis, possibly inverted.
  */
-enum Axis {
-    
+public enum Axis {
+
     /** X-Axis. */
     X,
     /** Y-Axis. */
     Y,
     /** Z-Axis. */
-    Z
+    Z,
+    /** X-Axis multiplied with -1. */
+    X_INVERTED,
+    /** Y-Axis multiplied with -1. */
+    Y_INVERTED,
+    /** Z-Axis multiplied with -1. */
+    Z_INVERTED
+
 }

@@ -34,6 +34,53 @@ import static org.junit.Assert.*;
 public class NormalizingPlyReaderTest {
 
     @Test
+    public void shuffleAxes() throws IOException {
+
+        ElementType vertexType = new ElementType(
+                "vertex",
+                new Property("x", DataType.DOUBLE),
+                new Property("y", DataType.DOUBLE),
+                new Property("z", DataType.DOUBLE));
+
+        Element vertex = new Element(vertexType);
+        vertex.setDouble("x", 1);
+        vertex.setDouble("y", 2);
+        vertex.setDouble("z", 3);
+
+        ElementType faceType = new ElementType(
+                "face",
+                new ListProperty(DataType.UCHAR, "vertex_indices", DataType.INT));
+
+
+        ElementReader vertexReader = mock(ElementReader.class);
+        when(vertexReader.getElementType()).thenReturn(vertexType);
+        when(vertexReader.readElement()).thenReturn(vertex).thenReturn(null);
+
+        ElementReader faceReader = mock(ElementReader.class);
+        when(faceReader.getElementType()).thenReturn(faceType);
+        when(faceReader.readElement()).thenReturn(null);
+
+        PlyReader plyReader = mock(PlyReader.class);
+        when(plyReader.nextElementReader()).
+                thenReturn(vertexReader).thenReturn(faceReader);
+        when(plyReader.getElementTypes()).
+                thenReturn(Arrays.asList(vertexType, faceType));
+
+        PlyReader target = new NormalizingPlyReader(
+                plyReader,
+                TesselationMode.PASS_THROUGH, NormalMode.DO_NOTHING, TextureMode.DO_NOTHING,
+                Axis.Y_INVERTED, Axis.X, Axis.Z_INVERTED);
+
+
+        Element expected = new Element(vertexType);
+        expected.setDouble("x", -2);
+        expected.setDouble("y", 1);
+        expected.setDouble("z", -3);
+        
+        assertEquals(expected, target.nextElementReader().readElement());
+    }
+
+    @Test
     public void renameVertexIndex() throws IOException {
 
         ElementType vertexType = new ElementType(
