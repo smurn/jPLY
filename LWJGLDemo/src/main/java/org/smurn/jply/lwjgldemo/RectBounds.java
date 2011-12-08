@@ -21,10 +21,15 @@ package org.smurn.jply.lwjgldemo;
 class RectBounds {
 
     private double minX;
+
     private double maxX;
+
     private double minY;
+
     private double maxY;
+
     private double minZ;
+
     private double maxZ;
 
     /**
@@ -74,6 +79,29 @@ class RectBounds {
         maxX = Math.max(maxX, x);
         maxY = Math.max(maxY, y);
         maxZ = Math.max(maxZ, z);
+    }
+
+    /**
+     * Gets the coordinates of the center point.
+     */
+    public double[] getCenter() {
+        return new double[]{
+                    (minX + maxX) / 2.0,
+                    (minY + maxY) / 2.0,
+                    (minZ + maxZ) / 2.0
+                };
+    }
+    
+    /**
+     * Gets the scale factor by which the box needs to be multiplied
+     * that it fits into a cube with edge length 1.
+     */
+    public double getScaleToUnityBox(){
+        double largestEdge = 0;
+        largestEdge = Math.max(largestEdge, maxX - minX);
+        largestEdge = Math.max(largestEdge, maxY - minY);
+        largestEdge = Math.max(largestEdge, maxZ - minZ);
+        return 1.0 / largestEdge;
     }
 
     /**

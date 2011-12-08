@@ -15,7 +15,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Djava.library.path=target/natives -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath org.smurn.jply.lwjgldemo.Demo</exec.args>
+                <exec.args>-Djava.library.path=target/natives -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath org.smurn.jply.lwjgldemo.LWJGLDemo</exec.args>
                 <jpda.listen>true</jpda.listen>
             </properties>
         </action>
