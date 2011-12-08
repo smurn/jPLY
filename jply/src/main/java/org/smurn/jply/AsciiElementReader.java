@@ -27,12 +27,16 @@ class AsciiElementReader implements ElementReader {
 
     /** Type of the elements we read. */
     private final ElementType type;
+
     /** Source to read from. */
     private final BufferedReader reader;
+
     /** Number of elements. */
     private final int count;
+
     /** Index of the next row to read. */
     private int nextRow = 0;
+
     /** Flag indicating if the user closed this reader. */
     private boolean closed = false;
 
@@ -87,13 +91,21 @@ class AsciiElementReader implements ElementReader {
         for (int propI = 0; propI < properties.size(); propI++) {
             Property property = properties.get(propI);
             if (property instanceof ListProperty) {
+                if (Math.abs(Math.round(numbers[pos]) - numbers[pos]) > 1E-6){
+                    throw new IOException("array size is not integer.");
+                }
                 int valueCount = (int) Math.round(numbers[pos++]);
+                
                 values[propI] = Arrays.copyOfRange(numbers, pos,
                         pos + valueCount);
                 pos += valueCount;
             } else {
                 values[propI] = new double[]{numbers[pos++]};
             }
+        }
+        if (pos != numbers.length) {
+            throw new IOException(
+                    "Invalid PLY format. To many values for an element.");
         }
 
         nextRow++;
