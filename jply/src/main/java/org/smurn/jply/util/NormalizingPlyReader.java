@@ -372,7 +372,7 @@ public class NormalizingPlyReader implements PlyReader {
 
             NormalGenerator generator = new NormalGenerator();
             if (normalMode == NormalMode.ADD_NORMALS_CW) {
-                generator.setCounterClockwise(true);
+                generator.setCounterClockwise(false);
             }
 
             generator.generateNormals(reader.duplicate(), faces);
