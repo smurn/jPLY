@@ -51,6 +51,8 @@ class BinaryPlyInputStream {
         this.channel = channel;
         this.buffer = ByteBuffer.allocate(BUFFER_SIZE);
         this.buffer.order(byteOrder);
+        this.buffer.clear();
+        this.buffer.position(this.buffer.capacity());
     }
 
     /**
