@@ -137,17 +137,20 @@ class WrappingPlyReader implements PlyReader {
         return elementTypes;
     }
 
+    /**
+     * This method is NOT supported on this type since the wrappers
+     * might change the element count.
+     * <p>If the count is needed, consider wrapping this PLY reader in a
+     * {@link RandomPlyReader}. This will ensure that this method works as
+     * expected.</p>
+     * @param elementType Name of the element type.
+     * @return Number of elements of the given type.
+     * @throws UnsupportedOperationException IS ALWAYS THROWN.
+     */
     @Override
     public int getElementCount(final String elementType) {
-        if (elementType == null) {
-            throw new NullPointerException("elementType must not be null.");
-        }
-        if (!wrappedMap.containsKey(elementType)) {
-            return reader.getElementCount(elementType);
-        }
-
-        ElementType unwrapped = wrappedMap.get(elementType).getUnwrappedType();
-        return reader.getElementCount(unwrapped.getName());
+        throw new UnsupportedOperationException(
+                "Wrappers might change the element count.");
     }
 
     @Override
