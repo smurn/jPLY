@@ -26,7 +26,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>${profiler.args} -classpath %classpath org.smurn.jply.lwjgldemo.Demo</exec.args>
+                <exec.args>${profiler.args} -Djava.library.path=target/natives -classpath %classpath org.smurn.jply.lwjgldemo.LWJGLDemo</exec.args>
                 <profiler.action>profile</profiler.action>
                 <exec.executable>${profiler.java}</exec.executable>
             </properties>
