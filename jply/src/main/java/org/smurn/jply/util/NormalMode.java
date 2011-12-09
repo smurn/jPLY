@@ -24,7 +24,7 @@ public enum NormalMode {
      * Do not change existing normals, nor add any if normals are missing in
      * the file.
      */
-    DO_NOTHING,
+    PASS_THROUGH,
 
     /**
      * Do not change existing normals, but generate normals if the file does

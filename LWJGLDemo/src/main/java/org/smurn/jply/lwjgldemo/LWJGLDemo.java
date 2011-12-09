@@ -72,7 +72,7 @@ public class LWJGLDemo {
         plyReader = new NormalizingPlyReader(plyReader,
                 TesselationMode.TRIANGLES,
                 NormalMode.ADD_NORMALS_CCW,
-                TextureMode.DO_NOTHING);
+                TextureMode.PASS_THROUGH);
 
         // We can get the number of vertices and triangles before
         // reading it. We will use this to allocate buffers of the right size.

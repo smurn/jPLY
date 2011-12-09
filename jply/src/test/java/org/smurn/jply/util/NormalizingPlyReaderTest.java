@@ -68,7 +68,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.DO_NOTHING, TextureMode.DO_NOTHING,
+                TesselationMode.PASS_THROUGH, NormalMode.PASS_THROUGH, TextureMode.PASS_THROUGH,
                 Axis.Y_INVERTED, Axis.X, Axis.Z_INVERTED);
 
 
@@ -114,7 +114,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.DO_NOTHING, TextureMode.DO_NOTHING);
+                TesselationMode.PASS_THROUGH, NormalMode.PASS_THROUGH, TextureMode.PASS_THROUGH);
 
         ElementType faceTypeExpected = new ElementType(
                 "face",
@@ -188,7 +188,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.DO_NOTHING, TextureMode.XY);
+                TesselationMode.PASS_THROUGH, NormalMode.PASS_THROUGH, TextureMode.XY);
 
         Element actual = target.nextElementReader().readElement();
 
@@ -273,7 +273,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.TRIANGLES, NormalMode.ADD_NORMALS_CCW, TextureMode.DO_NOTHING);
+                TesselationMode.TRIANGLES, NormalMode.ADD_NORMALS_CCW, TextureMode.PASS_THROUGH);
 
         ElementReader actualVertexReader = target.nextElementReader();
         assertEquals(vertex0, actualVertexReader.readElement());
@@ -382,7 +382,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW, TextureMode.DO_NOTHING);
+                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW, TextureMode.PASS_THROUGH);
 
         ElementReader actualVertexReader = target.nextElementReader();
 
@@ -467,7 +467,7 @@ public class NormalizingPlyReaderTest {
 
         PlyReader target = new NormalizingPlyReader(
                 plyReader,
-                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW, TextureMode.DO_NOTHING);
+                TesselationMode.PASS_THROUGH, NormalMode.ADD_NORMALS_CCW, TextureMode.PASS_THROUGH);
 
         ElementReader actualVertexReader = target.nextElementReader();
         assertEquals(vertex0, actualVertexReader.readElement());

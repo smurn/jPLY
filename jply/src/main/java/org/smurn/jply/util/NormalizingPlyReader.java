@@ -100,7 +100,7 @@ public class NormalizingPlyReader implements PlyReader {
 
         TexGenStrategy texGenStrategyTmp;
         switch (textureMode) {
-            case DO_NOTHING:
+            case PASS_THROUGH:
                 texGenStrategyTmp = null;
                 break;
             case XY:
@@ -130,7 +130,7 @@ public class NormalizingPlyReader implements PlyReader {
 
         if (!typeMap.containsKey("face")
                 && (tesselationMode != TesselationMode.PASS_THROUGH
-                || normalMode != NormalMode.DO_NOTHING)) {
+                || normalMode != NormalMode.PASS_THROUGH)) {
 
             throw new IllegalArgumentException(
                     "PLY file contains no face data.");
@@ -197,7 +197,7 @@ public class NormalizingPlyReader implements PlyReader {
         // Build the new vertex element type
         final ElementType unwrappedVertexType = typeMap.get("vertex");
         ElementType maybeWithNormal;
-        if (normalMode != NormalMode.DO_NOTHING) {
+        if (normalMode != NormalMode.PASS_THROUGH) {
             maybeWithNormal = addNormalProps(unwrappedVertexType);
             generateNormals = !maybeWithNormal.equals(unwrappedVertexType);
         } else {

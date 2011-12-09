@@ -24,7 +24,7 @@ public enum TextureMode {
      * Do not change existing texture coordinates, nor add any if the
      * coordinates are missing in the file.
      */
-    DO_NOTHING,
+    PASS_THROUGH,
     /**
      * Generate texture coordinates based on the vertex's x (u) and y (v)
      * coordinates.
