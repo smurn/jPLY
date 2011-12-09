@@ -1,11 +1,11 @@
 ply
 format ascii 1.0
 element vertex 3
-property float x
-property float y
-property float z
+property float32 x
+property float32 y
+property float32 z
 element face 2
-property list uchar int vertex_index
+property list uint8 int32 vertex_index
 end_header
 0 0 0
 0 0 1
