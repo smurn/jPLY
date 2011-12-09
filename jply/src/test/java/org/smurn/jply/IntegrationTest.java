@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 stefan.
+ * Copyright 2011 Stefan C. Mueller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.smurn.jply;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -25,6 +24,114 @@ import static org.junit.Assert.*;
 /**
  */
 public class IntegrationTest {
+
+    @Test
+    public void binaryBigEndian() throws IOException {
+        PlyReaderImpl reader = new PlyReaderImpl(
+                ClassLoader.getSystemResourceAsStream("simple-bigendian.ply"));
+
+        ElementType vertexType = new ElementType("vertex",
+                new Property("x", DataType.FLOAT),
+                new Property("y", DataType.FLOAT),
+                new Property("z", DataType.FLOAT));
+
+        Element expectedVertex0 = new Element(vertexType);
+        expectedVertex0.setDouble("x", 0);
+        expectedVertex0.setDouble("y", 0);
+        expectedVertex0.setDouble("z", 0);
+
+        Element expectedVertex1 = new Element(vertexType);
+        expectedVertex1.setDouble("x", 0);
+        expectedVertex1.setDouble("y", 0);
+        expectedVertex1.setDouble("z", 1);
+
+        Element expectedVertex2 = new Element(vertexType);
+        expectedVertex2.setDouble("x", 0);
+        expectedVertex2.setDouble("y", 1);
+        expectedVertex2.setDouble("z", 1);
+
+        ElementType faceType = new ElementType("face",
+                new ListProperty(DataType.UCHAR, "vertex_index", DataType.INT));
+
+        Element expectedFace0 = new Element(faceType);
+        expectedFace0.setIntList("vertex_index", new int[]{0, 1, 2});
+
+        Element expectedFace1 = new Element(faceType);
+        expectedFace1.setIntList("vertex_index", new int[]{1, 0, 1, 2});
+
+        ElementReader vertexReader = reader.nextElementReader();
+        Element vertex0 = vertexReader.readElement();
+        Element vertex1 = vertexReader.readElement();
+        Element vertex2 = vertexReader.readElement();
+        assertNull(vertexReader.readElement());
+        vertexReader.close();
+
+        ElementReader faceReader = reader.nextElementReader();
+        Element face0 = faceReader.readElement();
+        Element face1 = faceReader.readElement();
+        assertNull(faceReader.readElement());
+        faceReader.close();
+
+        assertEquals(expectedVertex0, vertex0);
+        assertEquals(expectedVertex1, vertex1);
+        assertEquals(expectedVertex2, vertex2);
+        assertEquals(expectedFace0, face0);
+        assertEquals(expectedFace1, face1);
+    }
+
+    @Test
+    public void binaryLittleEndian() throws IOException {
+        PlyReaderImpl reader = new PlyReaderImpl(
+                ClassLoader.getSystemResourceAsStream("simple-littleendian.ply"));
+
+        ElementType vertexType = new ElementType("vertex",
+                new Property("x", DataType.FLOAT),
+                new Property("y", DataType.FLOAT),
+                new Property("z", DataType.FLOAT));
+
+        Element expectedVertex0 = new Element(vertexType);
+        expectedVertex0.setDouble("x", 0);
+        expectedVertex0.setDouble("y", 0);
+        expectedVertex0.setDouble("z", 0);
+
+        Element expectedVertex1 = new Element(vertexType);
+        expectedVertex1.setDouble("x", 0);
+        expectedVertex1.setDouble("y", 0);
+        expectedVertex1.setDouble("z", 1);
+
+        Element expectedVertex2 = new Element(vertexType);
+        expectedVertex2.setDouble("x", 0);
+        expectedVertex2.setDouble("y", 1);
+        expectedVertex2.setDouble("z", 1);
+
+        ElementType faceType = new ElementType("face",
+                new ListProperty(DataType.UCHAR, "vertex_index", DataType.INT));
+
+        Element expectedFace0 = new Element(faceType);
+        expectedFace0.setIntList("vertex_index", new int[]{0, 1, 2});
+
+        Element expectedFace1 = new Element(faceType);
+        expectedFace1.setIntList("vertex_index", new int[]{1, 0, 1, 2});
+
+        ElementReader vertexReader = reader.nextElementReader();
+        Element vertex0 = vertexReader.readElement();
+        Element vertex1 = vertexReader.readElement();
+        Element vertex2 = vertexReader.readElement();
+        assertNull(vertexReader.readElement());
+        vertexReader.close();
+
+        ElementReader faceReader = reader.nextElementReader();
+        Element face0 = faceReader.readElement();
+        Element face1 = faceReader.readElement();
+        assertNull(faceReader.readElement());
+        faceReader.close();
+
+        assertEquals(expectedVertex0, vertex0);
+        assertEquals(expectedVertex1, vertex1);
+        assertEquals(expectedVertex2, vertex2);
+        assertEquals(expectedFace0, face0);
+        assertEquals(expectedFace1, face1);
+    }
 
     @Test
     public void cube() throws IOException {
