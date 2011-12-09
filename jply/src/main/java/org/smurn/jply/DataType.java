@@ -62,6 +62,22 @@ public enum DataType {
             return FLOAT;
         } else if ("double".equals(typeName)) {
             return DOUBLE;
+        } else if ("int8".equals(typeName)) {
+            return CHAR;
+        } else if ("uint8".equals(typeName)) {
+            return UCHAR;
+        } else if ("int16".equals(typeName)) {
+            return SHORT;
+        } else if ("uint16".equals(typeName)) {
+            return USHORT;
+        } else if ("int32".equals(typeName)) {
+            return INT;
+        } else if ("uint32".equals(typeName)) {
+            return UINT;
+        } else if ("float32".equals(typeName)) {
+            return FLOAT;
+        } else if ("float64".equals(typeName)) {
+            return DOUBLE;
         } else {
             throw new IllegalArgumentException("Not a valid PLY data type.");
         }
