@@ -52,6 +52,7 @@ public class NormalizingPlyReader implements PlyReader {
      * @param plyReader The reader providing the data to be normalized.
      * @param tesselationMode    Tesselation operation.
      * @param normalMode Normal vector generation operation.
+     * @param textureMode Texture coordinate generation operation.
      */
     public NormalizingPlyReader(final PlyReader plyReader,
             final TesselationMode tesselationMode,
@@ -65,6 +66,7 @@ public class NormalizingPlyReader implements PlyReader {
      * @param plyReader The reader providing the data to be normalized.
      * @param tesselationMode    Tesselation operation.
      * @param normalMode Normal vector generation operation.
+     * @param textureMode Texture coordinate generation operation.
      * @param x The axis in the source to map to the x in the normalized data.
      * @param y The axis in the source to map to the y in the normalized data.
      * @param z The axis in the source to map to the z in the normalized data.

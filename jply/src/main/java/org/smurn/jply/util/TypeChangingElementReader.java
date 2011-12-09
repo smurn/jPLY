@@ -53,18 +53,14 @@ class TypeChangingElementReader implements ElementReader {
 
     /** Source of the elements. */
     private final ElementReader reader;
-
     /** Type of the elements we produce. */
     private final ElementType targetType;
-
     /** Properties shared between the source and the target type that are
     non-list properties in the target. */
     private final List<String> sharedPropertiesNoList;
-
     /** Properties shared between the source and the target type that are
     list properties in the target. */
     private final List<String> sharedPropertiesList;
-
     /** Map for property renames. */
     private final Map<String, String> propertyNameMap;
 
@@ -91,7 +87,8 @@ class TypeChangingElementReader implements ElementReader {
      * is {@code null}.
      */
     TypeChangingElementReader(final ElementReader reader,
-            final ElementType targetType, Map<String, String> sourceNames) {
+            final ElementType targetType,
+            final Map<String, String> sourceNames) {
         if (reader == null) {
             throw new NullPointerException("reader must not be null.");
         }
@@ -113,7 +110,8 @@ class TypeChangingElementReader implements ElementReader {
         for (Property targetProp : targetType.getProperties()) {
             boolean match = false;
             for (Property sourceProp : sourceType.getProperties()) {
-                if (sourceProp.getName().equals(getSourceName(targetProp.getName()))) {
+                if (sourceProp.getName().
+                        equals(getSourceName(targetProp.getName()))) {
                     match = true;
                     break;
                 }
@@ -132,7 +130,12 @@ class TypeChangingElementReader implements ElementReader {
                 sharedPropertiesListTmp);
     }
 
-    private String getSourceName(String property) {
+    /**
+     * Get the name of a property in the source type.
+     * @param property Name of the property in the target type.
+     * @return Name of a property in the source type.
+     */
+    private String getSourceName(final String property) {
         if (propertyNameMap.containsKey(property)) {
             return propertyNameMap.get(property);
         } else {

@@ -26,11 +26,8 @@ import org.smurn.jply.ElementType;
 class AxisShufflingVertexReader implements ElementReader {
 
     private final ElementReader reader;
-
     private final Axis xAxis;
-
     private final Axis yAxis;
-
     private final Axis zAxis;
 
     /**
@@ -108,9 +105,10 @@ class AxisShufflingVertexReader implements ElementReader {
      * @param y Input y value.
      * @param z Input z value.
      * @param axis Axis to return.
-     * @return 
+     * @return The value of a given axis.
      */
-    private double getValue(double x, double y, double z, Axis axis) {
+    private double getValue(final double x, final double y, final double z,
+            final Axis axis) {
         switch (axis) {
             case X:
                 return x;

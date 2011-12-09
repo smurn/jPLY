@@ -45,7 +45,7 @@ class WrappingPlyReader implements PlyReader {
         private final ElementType wrappedType;
 
         /**
-         * Creates a wrapper factory;
+         * Creates a wrapper factory.
          * @param unwrappedType Type before wrapping.
          * @param wrappedType Type after wrapping.
          */
