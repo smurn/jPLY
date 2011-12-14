@@ -11,6 +11,7 @@
     <artifactId>consoledemo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>ConsoleDemo</name>
+    <url>http://www.smurn.org/jplyPackage/consoledemo/</url>
    
     <licenses>
         <license>
@@ -28,8 +29,8 @@
         <url>https://github.com/smurn/jply/issues</url>
     </issueManagement>
     <ciManagement>
-        <system>Hudson</system>
-        <url>http://greebo.smurn.org:8080/hudson/job/jply</url>
+        <system>Jenkins</system>
+        <url>http://greebo.smurn.org:8080/jenkins/job/jPly/</url>
     </ciManagement>
     <developers>
         <developer>
@@ -54,8 +55,61 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-ssh</artifactId>
+                        <version>2.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>summary</report>
+                                        <report>issue-tracking</report>
+                                        <report>cim</report>
+                                        <report>dependencies</report>
+                                        <report>dependency-convergence</report>
+                                        <report>dependency-management</report>
+                                        <report>license</report>
+                                        <report>project-team</report>
+                                        <report>scm</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jxr-plugin</artifactId>
+                            <version>2.3</version>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
+    <distributionManagement>
+        <repository>
+            <id>smurn</id>
+            <name>Private Repository</name>
+            <url>scp://smurn.org/var/www/www.smurn.org/repos</url>
+        </repository>
+        <site>
+            <id>smurn</id>
+            <url>scp://smurn.org/var/www/www.smurn.org/jplyPackage/consoledemo/</url>
+        </site>
+    </distributionManagement>
    
     <dependencies>
         <dependency>

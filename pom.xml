@@ -8,11 +8,89 @@
     <packaging>pom</packaging>
 
     <name>jPly Package</name>
-    <url>http://maven.apache.org</url>
+    <url>http://www.smurn.org/jplyPackage/</url>
+    
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>/LICENSE.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:smurn/jply.git</connection>
+        <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
+        <url>scm:git:https://github.com/smurn/jply/tree/master</url>
+    </scm>
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/smurn/jply/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://greebo.smurn.org:8080/jenkins/job/jPly/</url>
+    </ciManagement>
+    <developers>
+        <developer>
+            <name>Stefan C. Mueller</name>
+        </developer>
+    </developers>
 
     <modules>
         <module>jply</module>
         <module>consoledemo</module>
-    <module>LWJGLDemo</module>
-  </modules>
+        <module>LWJGLDemo</module>
+    </modules>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-ssh</artifactId>
+                        <version>2.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>summary</report>
+                                        <report>issue-tracking</report>
+                                        <report>cim</report>
+                                        <report>dependencies</report>
+                                        <report>dependency-convergence</report>
+                                        <report>dependency-management</report>
+                                        <report>license</report>
+                                        <report>project-team</report>
+                                        <report>scm</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <distributionManagement>
+        <repository>
+            <id>smurn</id>
+            <name>Private Repository</name>
+            <url>scp://smurn.org/var/www/www.smurn.org/repos</url>
+        </repository>
+        <site>
+            <id>smurn</id>
+            <url>scp://smurn.org/var/www/www.smurn.org/jplyPackage/</url>
+        </site>
+    </distributionManagement>
 </project>
