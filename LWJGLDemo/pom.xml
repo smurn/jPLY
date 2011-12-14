@@ -12,6 +12,10 @@
     <version>1.0-SNAPSHOT</version>
     <name>LWJGLDemo</name>
     <url>http://www.smurn.org/jplyPackage/lwjgldemo/</url>
+    <description>
+        A OpenGL demo application showing how to use PLY to render a model
+        with LWJGL.
+    </description>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>

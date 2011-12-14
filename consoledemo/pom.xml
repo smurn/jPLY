@@ -12,6 +12,10 @@
     <version>1.0-SNAPSHOT</version>
     <name>ConsoleDemo</name>
     <url>http://www.smurn.org/jplyPackage/consoledemo/</url>
+    <description>
+        A minimal application that reads a PLY file and dumps some
+        information from it to the console.
+    </description>
    
     <licenses>
         <license>

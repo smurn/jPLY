@@ -10,6 +10,7 @@
 
     <name>jPly</name>
     <url>http://www.smurn.org/jplyPackage/jply/</url>
+    <description>Java library to read files in the PLY format.</description>
 	
     <parent>
         <groupId>org.smurn</groupId>

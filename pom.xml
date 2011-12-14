@@ -9,6 +9,11 @@
 
     <name>jPly Package</name>
     <url>http://www.smurn.org/jplyPackage/</url>
+    <description>
+        Java library to read files in the PLY format.
+        This is the parent maven module for the actual library and the
+        demo applications.
+    </description>
     
     <licenses>
         <license>
