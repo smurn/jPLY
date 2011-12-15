@@ -16,7 +16,8 @@
 package org.smurn.jply.util;
 
 /**
- * Operation modes for texture coordinate generation.
+ * Operation modes for texture coordinate generation by
+ * {@link NormalizingPlyReader}.
  */
 public enum TextureMode {
 
