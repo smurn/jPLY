@@ -1,1 +1,17 @@
-hello world
+jPLY Package
+
+  This is the page of the main jPLY Maven module. It is the parent module
+of the {{{./jply/index.html}jPLY Library}} and the demo applications.
+
+* Sub Projects
+
+  * {{{./jply/index.html}jPLY Library}} you'll find all the information regarding
+the library there.
+
+  * {{{./consoledemo/index.html}Console Demo}} a small demo application printing
+some data from a PLY file to the console.
+
+  * {{{./lwjgldemo/index.html}LWJGL Demo}} a demo application rendering a PLY
+file with OpenGL.
+
+  []

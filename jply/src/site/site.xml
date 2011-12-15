@@ -21,8 +21,18 @@ under the License.
 
 <project xmlns="http://maven.apache.org/DECORATION/1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+    name="jPLY Library">
   <body>
+    <menu name="jPLY Library">
+        <item name="Introduction" href="index.html" />
+        <item name="How to get it" href="download.html" />
+        <item name="Manual" href="manual.html"/>
+        <item name="PLY File Format" href="plyformat.html"/>
+        <item name="JavaDoc" href="apidocs/index.html"/>
+        <item name="Console Demo" href="../consoledemo/index.html"/>
+        <item name="LWJGL (OpenGL) Demo" href="../lwjgldemo/index.html"/>
+    </menu>
     <menu ref="parent" />
     <menu ref="reports" />
   </body>

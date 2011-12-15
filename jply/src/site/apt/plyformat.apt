@@ -1,0 +1,100 @@
+The PLY file format
+
+  The PLY file format was designed by Greg Turk to store polygon models. The
+format itself is very flexible and can be used to store other data too. Yet
+typically PLY files are used for polynomial models only, but the flexibility
+of the format makes it possible to add custom data to the files.
+
+  PLY files store data as sequences of elements. Each element belongs to a
+certain element type. The type defines the properties that describe the elements
+of that type. For example, polygon models typically have at least two types:
+
+ * A vertex type with properties for x, y and z and possibly additional values
+such as vertex color.
+
+ * A face type with a list of indices referencing the vertices that form
+a polygonal face.
+
+ []
+
+  The elements of a particular type are sequentially stored in a PLY file. jPLY
+is reading the file in this sequence to minimize the memory overhead. This is why
+the jPLY API is providing the elements one type after the other.
+
+  The PLY format supports various data types and three different formats to
+actually store the elements (ASCII, little-endian and big-endian). the jPLY
+library is taking care of this. To the user of jPLY every property value
+behaves like a double array. Convenience methods are provided to access single
+value properties and integer values.
+
+  The PLY specification mentions some element types and some properties. Most
+files use those as a convention:
+
+  [<<<vertex>>>] Element type for vertex definitions. The <<<vertex>>> type
+should have at least three properties named <<<x>>>, <<<y>>> and <<<z>>>
+for the position of the vertex.
+
+    The specification also mentions optional <<<red>>>, <<<green>>>,
+<<<blue>>> properties to define the color of a vertex.
+
+    For more material properties a reference to a material definition can be
+added to a vertex with the <<<material_index>>> property. The value of that
+property is a (zero-based) index to an element of type <<<material>>>
+(see below).
+
+  [<<<face>>>] Element type for polygon definitions. The <<<face>>> type 
+should have at least one property called <<<vertex_index>>>, storing a list
+of (zero-based) indicies into the <<<vertex>>> elements.
+
+    The indicies select the vertices that form the polygon. The vertices
+should all lie on a common plane. There should be at least three
+vertices per face.
+
+   Color and material of a polygon can be specified with the same properties
+as used for vertices.
+
+  [<<<edge>>>] Element type for line segments. The <<<edge>>> type should
+have at least two properties <<<vertex1>>> and <<<vertex2>>>,
+storing a (zero-based) index into the <<<vertex>>> elements defining
+the start and end point of the edge.
+
+    Color and material of an edge can be specified with the same properties
+as used for vertices.
+
+  [<<<material>>>] Type for material description elements. Each element
+describes a material. Materials can be referenced from other elements using
+the <<<material_index>>> property.
+   There are several properties of a material mentioned in the specification:
+
+    * <<<ambient_red>>>
+
+    * <<<ambient_green>>>
+
+    * <<<ambient_blue>>>
+ 
+    * <<<ambient_coeff>>>
+
+    * <<<diffuse_red>>>
+
+    * <<<diffuse_green>>>
+
+    * <<<diffuse_blue>>>
+
+    * <<<diffuse_coeff>>>
+
+    * <<<specular_red>>>
+
+    * <<<specular_green>>>
+
+    * <<<specular_blue>>>
+
+    * <<<specular_coeff>>>
+
+    * <<<specular_power>>>
+
+    []
+  []
+
+  Note that not all files follow that convention. In particular there seems
+to be an other, different, convention in use. The <<<NormalizingPlyReader>>>
+maps it to the convention described here automatically.

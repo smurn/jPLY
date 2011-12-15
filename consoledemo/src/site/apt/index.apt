@@ -1,1 +1,10 @@
-hello world
+jPLY Console Demo Application
+
+  This is a small demo application of the {{{../jply/index.html}jPLY}} library
+to read files in the PLY format.
+
+  This application does nothing but opening a PLY file and dumping the 
+coordinates of the vertices to the console. 
+
+  Go ahead and have a look at the 
+{{{./xref/org/smurn/jply/consoledemo/ConsoleDemo.html}Source Code}}.

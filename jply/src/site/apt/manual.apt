@@ -1,0 +1,91 @@
+How to use jPLY
+
+  jPLY is very easy to use. It uses the same design patterns as the classes
+in the <<<java.io>>> package. So there won't be many surprises.
+
+  It might be a good point to read {{{./plyformat.html}PLY Format}} to get
+an idea what kind of data is stored in PLY files.
+
+  The first step is to create a <<<PlyReader>>>:
+
+-----
+PlyReader ply = new PlyReaderImpl(...);
+-----
+
+  You can provide the file's path as a <<<String>>>, or a <<<File>>> instance or
+you can provide an <<<InputStream>>>. In the first two cases, if the file name
+ends with ".gz" the file is automatically decompressed.
+
+  The next step is optional:
+
+-----
+ply = new NormalizingPlyReader(ply,
+            TesselationMode.TRIANGLES,
+            NormalMode.ADD_NORMALS_CCW,
+            TextureMode.XY
+        );
+-----
+
+  This wraps the PlyReader to perform some normalization. Not all PLY files
+include the same data and there are some inconsistencies in the naming conventions.
+You can pass enum values to the constructor of <<<NormalizingPlyReader>>>
+to make it create missing normal vectors and or texture coordinates.
+It can also convert arbitrary polygon meshes to triangle meshes and do some
+simple coordinate transformations.
+
+  Once you have your PlyReader you can inspect the structure of the file using
+<<<getElementTypes()>>>. You can also get the number of elements for each type
+before actually reading them. This is very handy to pre-allocate buffers:
+
+-----
+int numberOfVertices = ply.getElementCount("vertex");
+-----
+
+  Reading the elements stored in the file is very simple. Use
+<<<nextElementReader()>>> to receive a <<<ElementReader>>> for the first
+element type. That reader will then read the elements:
+
+-----
+ElementReader readerTypeA = ply.nextElementReader();
+Element elementA0 = readerTypeA.readElement();
+Element elementA1 = readerTypeA.readElement();
+...
+readerTypeA.close();
+-----
+
+  Once finished reading the elements (<<<null>>> is returned if there
+are no more elements) close the element reader and get the reader for
+the elements of the next type:
+
+-----
+ElementReader readerTypeB = ply.nextElementReader();
+Element elementB0 = readerTypeA.readElement();
+Element elementB1 = readerTypeA.readElement();
+...
+readerTypeB.close();
+ply.close();
+-----
+
+  Finally you should close the <<<PlyReader>>>. Note that this reads the
+elements in the order they are stored in the file which minimizes the memory
+overhead (at least as long as you don't use the normalizer).
+
+  Oh, at one point you'll also like to get the actual information out of
+the elements! Just use the getters on <<<Element>>> with the property name
+as the parameter:
+
+-----
+double x = elementA0.getDouble("x");
+double y = elementA0.getDouble("y");
+double z = elementA0.getDouble("z");
+int[] indices = elementB0.getIntList("vertex_index");
+-----
+
+  Don't mind the different data types that the PLY format supports. jPLY
+converts them to whatever you need.
+
+  That's it! You find find all the details you need in the
+{{{./apidocs/index.html}JavaDoc}}. There are also two demo applications, a 
+{{{../consoledemo/index.html}simple one}} dumping some data from the file to 
+the console, and another one 
+{{{../lwjgldemo/index.html} rendering PLY models using LWJGL}}.

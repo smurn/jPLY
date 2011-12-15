@@ -1,0 +1,14 @@
+How to get jPLY?
+
+* For Maven Users
+
+  TODO
+
+* For everybody else
+
+  We have a {{{https://github.com/smurn/jPly/downloads}download page}} where
+you can get the jar file for jPLY.
+
+  Note that jPLY depends on 
+{{{http://commons.apache.org/lang/download_lang.cgi}Apache Commons Lang 3.1}}
+so you need to get this library too.
