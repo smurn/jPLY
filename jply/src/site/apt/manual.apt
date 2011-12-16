@@ -9,7 +9,7 @@ an idea what kind of data is stored in PLY files.
   The first step is to create a <<<PlyReader>>>:
 
 -----
-PlyReader ply = new PlyReaderImpl(...);
+PlyReader ply = new PlyReaderFile(...);
 -----
 
   You can provide the file's path as a <<<String>>>, or a <<<File>>> instance or

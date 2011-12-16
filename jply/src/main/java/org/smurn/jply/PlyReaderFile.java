@@ -35,7 +35,7 @@ import java.util.zip.GZIPInputStream;
 /**
  * Reads meshes in the PLY file format.
  */
-public final class PlyReaderImpl implements PlyReader {
+public final class PlyReaderFile implements PlyReader {
 
     /** Types in this file. */
     private List<ElementType> elements;
@@ -62,7 +62,7 @@ public final class PlyReaderImpl implements PlyReader {
      * @throws NullPointerException if {@code file} is {@code null}.
      * @throws IOException if an error occurs during opening or reading.
      */
-    public PlyReaderImpl(final File file) throws IOException {
+    public PlyReaderFile(final File file) throws IOException {
         if (file == null) {
             throw new NullPointerException("file must not be null.");
         }
@@ -82,7 +82,7 @@ public final class PlyReaderImpl implements PlyReader {
      * @throws NullPointerException if {@code file} is {@code null}.
      * @throws IOException if an error occurs during opening or reading.
      */
-    public PlyReaderImpl(final String file) throws IOException {
+    public PlyReaderFile(final String file) throws IOException {
         this(new File(file));
     }
 
@@ -92,7 +92,7 @@ public final class PlyReaderImpl implements PlyReader {
      * @throws NullPointerException if {@code stream} is {@code null}.
      * @throws IOException if an error occurs during opening or reading.
      */
-    public PlyReaderImpl(final InputStream stream) throws IOException {
+    public PlyReaderFile(final InputStream stream) throws IOException {
         if (stream == null) {
             throw new NullPointerException("stream must not be null.");
         }

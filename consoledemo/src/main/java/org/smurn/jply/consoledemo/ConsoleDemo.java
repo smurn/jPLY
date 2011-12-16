@@ -20,7 +20,7 @@ import org.smurn.jply.Element;
 import org.smurn.jply.ElementReader;
 import org.smurn.jply.ElementType;
 import org.smurn.jply.PlyReader;
-import org.smurn.jply.PlyReaderImpl;
+import org.smurn.jply.PlyReaderFile;
 
 /**
  * Console application that prints out the positions of all vertices.
@@ -38,7 +38,7 @@ public class ConsoleDemo {
             // Reads a PLY file from an InputStream. Handy if, for example,
             // you receive PLY data via network sockets.
             
-            ply = new PlyReaderImpl(
+            ply = new PlyReaderFile(
                     ClassLoader.getSystemResourceAsStream("cube.ply"));
         } else {
 
@@ -46,7 +46,7 @@ public class ConsoleDemo {
             // If the file name ends with .gz its automatically decompressed.
 
             String file = args[0];
-            ply = new PlyReaderImpl(file);
+            ply = new PlyReaderFile(file);
         }
 
         // The elements are stored in order of their types. For each

@@ -27,7 +27,7 @@ public class IntegrationTest {
 
     @Test
     public void alternativeDataTypes() throws IOException {
-        PlyReaderImpl reader = new PlyReaderImpl(
+        PlyReaderFile reader = new PlyReaderFile(
                 ClassLoader.getSystemResourceAsStream("simple_alternative_datatype.ply"));
 
         ElementType vertexType = new ElementType("vertex",
@@ -81,7 +81,7 @@ public class IntegrationTest {
     
     @Test
     public void binaryBigEndian() throws IOException {
-        PlyReaderImpl reader = new PlyReaderImpl(
+        PlyReaderFile reader = new PlyReaderFile(
                 ClassLoader.getSystemResourceAsStream("simple-bigendian.ply"));
 
         ElementType vertexType = new ElementType("vertex",
@@ -135,7 +135,7 @@ public class IntegrationTest {
 
     @Test
     public void binaryLittleEndian() throws IOException {
-        PlyReaderImpl reader = new PlyReaderImpl(
+        PlyReaderFile reader = new PlyReaderFile(
                 ClassLoader.getSystemResourceAsStream("simple-littleendian.ply"));
 
         ElementType vertexType = new ElementType("vertex",
@@ -190,7 +190,7 @@ public class IntegrationTest {
     @Test
     public void cube() throws IOException {
 
-        PlyReaderImpl reader = new PlyReaderImpl(
+        PlyReaderFile reader = new PlyReaderFile(
                 ClassLoader.getSystemResourceAsStream("cube.ply"));
         ElementReader vertices = reader.nextElementReader();
 
@@ -278,7 +278,7 @@ public class IntegrationTest {
         str.append("1.5\r\n");
         str.append("2.5\r\n");
 
-        PlyReader target = new PlyReaderImpl(new ByteArrayInputStream(str.toString().getBytes("UTF-8")));
+        PlyReader target = new PlyReaderFile(new ByteArrayInputStream(str.toString().getBytes("UTF-8")));
 
         ElementType expectedType = new ElementType("vertex", new Property("x", DataType.FLOAT));
         Element expected0 = new Element(expectedType);

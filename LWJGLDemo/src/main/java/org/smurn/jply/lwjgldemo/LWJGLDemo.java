@@ -31,7 +31,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Util;
 import org.smurn.jply.ElementReader;
-import org.smurn.jply.PlyReaderImpl;
+import org.smurn.jply.PlyReaderFile;
 import org.smurn.jply.util.NormalMode;
 import org.smurn.jply.util.NormalizingPlyReader;
 import org.smurn.jply.util.TesselationMode;
@@ -64,7 +64,7 @@ public class LWJGLDemo {
         Display.create();
 
         // Open the PLY file
-        PlyReader plyReader = new PlyReaderImpl(
+        PlyReader plyReader = new PlyReaderFile(
                 ClassLoader.getSystemResourceAsStream("bunny.ply"));
 
         // Normalize the data in the PLY file to ensure that we only get
