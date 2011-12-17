@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>jPly</name>
+    <name>jPLY</name>
     <url>http://www.smurn.org/jplyPackage/jply/</url>
     <description>Java library to read files in the PLY format.</description>
 	
@@ -27,7 +27,7 @@
     <scm>
         <connection>scm:git:git@github.com:smurn/jply.git</connection>
         <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
-        <url>scm:git:https://github.com/smurn/jply/tree/master</url>
+        <url>https://github.com/smurn/jply/tree/master</url>
     </scm>
     <issueManagement>
         <system>Github</system>
