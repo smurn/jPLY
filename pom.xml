@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.smurn</groupId>
-    <artifactId>jply-package</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>jply</artifactId>
+    <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>jPly Package</name>
-    <url>http://www.smurn.org/jplyPackage/</url>
+    <url>http://jply.smurn.org</url>
     <description>
         Java library to read files in the PLY format.
         This is the parent maven module for the actual library and the
@@ -21,10 +21,15 @@
             <url>/LICENSE.txt</url>
         </license>
     </licenses>
-    <scm>
+    <!--<scm>
         <connection>scm:git:git@github.com:smurn/jply.git</connection>
         <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
-        <url>scm:git:https://github.com/smurn/jply/tree/master</url>
+        <url>https://github.com/smurn/jply/tree/master</url>
+    </scm>-->
+    <scm>
+        <connection>scm:git:scm@smurn.org:smurn/jply.git</connection>
+        <developerConnection>scm:git:git@github.com:/var/git/jPLY</developerConnection>
+        <url>https://github.com/smurn/jply/tree/master</url>
     </scm>
     <issueManagement>
         <system>Github</system>
@@ -50,12 +55,21 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-ssh</artifactId>
+                        <artifactId>wagon-ssh-external</artifactId>
                         <version>2.1</version>
                     </dependency>
                 </dependencies>
@@ -84,18 +98,80 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-ssh-external</artifactId>
+                        <version>2.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.8</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>    
+            </build>
+        </profile>
+    </profiles>
     
     <distributionManagement>
         <repository>
             <id>smurn</id>
             <name>Private Repository</name>
-            <url>scp://smurn.org/var/www/www.smurn.org/repos</url>
+            <url>scpexe://smurn.org/var/www/www.smurn.org/repos</url>
         </repository>
         <site>
             <id>smurn</id>
-            <url>scp://smurn.org/var/www/www.smurn.org/jplyPackage/</url>
+            <url>scpexe://smurn.org/var/www/jply.smurn.org/</url>
         </site>
     </distributionManagement>
 </project>

@@ -1,21 +1,22 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>jply-package</artifactId>
-        <groupId>org.smurn</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
     <groupId>org.smurn.jply</groupId>
     <artifactId>consoledemo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <name>ConsoleDemo</name>
-    <url>http://www.smurn.org/jplyPackage/consoledemo/</url>
+    <url>http://jply.smurn.org/consoledemo/</url>
     <description>
         A minimal application that reads a PLY file and dumps some
         information from it to the console.
     </description>
+   
+    <parent>
+        <artifactId>jply</artifactId>
+        <groupId>org.smurn</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
    
     <licenses>
         <license>
@@ -23,11 +24,11 @@
             <url>/LICENSE.txt</url>
         </license>
     </licenses>
-    <scm>
+    <!--<scm>
         <connection>scm:git:git@github.com:smurn/jply.git</connection>
         <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
-        <url>scm:git:https://github.com/smurn/jply/tree/master</url>
-    </scm>
+        <url>https://github.com/smurn/jply/tree/master</url>
+    </scm>-->
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/smurn/jply/issues</url>
@@ -50,15 +51,6 @@
   
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -102,18 +94,6 @@
             </plugin>
         </plugins>
     </build>
-    
-    <distributionManagement>
-        <repository>
-            <id>smurn</id>
-            <name>Private Repository</name>
-            <url>scp://smurn.org/var/www/www.smurn.org/repos</url>
-        </repository>
-        <site>
-            <id>smurn</id>
-            <url>scp://smurn.org/var/www/www.smurn.org/jplyPackage/consoledemo/</url>
-        </site>
-    </distributionManagement>
    
     <dependencies>
         <dependency>
