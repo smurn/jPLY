@@ -4,9 +4,9 @@ PLY - Polygon File Format
 Java library to read files in the PLY format.
 ---------------------------------------------
 
-jPLY is a library to read PLY files in a simple way. It has *complete support
-for all features* offered by the PLY format. jPLY is using the
-*Apache 2 License* so feel free to use it for open or closed source projects.
+jPLY is a library to read PLY files in a simple way. It has **complete support
+for all features** offered by the PLY format. jPLY is using the
+**Apache 2 License** so feel free to use it for open or closed source projects.
 
 Get your bearings:
 ---------------------------------------------
@@ -34,10 +34,10 @@ What is PLY, and when to use it?
 ---------------------------------------------
 
   PLY is a file format designed to store polygon meshes. Other than formats
-such as [COLLADA])http://www.collada.org) that can describe complete scenes,
+such as [COLLADA](http://www.collada.org) that can describe complete scenes,
 PLY only stores meshes.
 
-  This simplicity makes jPLY attractive where the complexity of COLLADA or VRML
+  This simplicity makes PLY attractive where the complexity of COLLADA or VRML
 would be troubling. For example when developing demo application or when
 testing 3D applications in the early developing stage one needs a simple
 and reliable way to load geometry.

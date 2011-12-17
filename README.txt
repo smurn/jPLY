@@ -37,7 +37,7 @@ What is PLY, and when to use it?
 such as COLLADA that can describe complete scenes,
 PLY only stores meshes.
 
-  This simplicity makes jPLY attractive where the complexity of  or VRML
+  This simplicity makes PLY attractive where the complexity of  or VRML
 would be troubling. For example when developing demo application or when
 testing 3D applications in the early developing stage one needs a simple
 and reliable way to load geometry.
