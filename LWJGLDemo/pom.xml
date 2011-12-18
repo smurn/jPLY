@@ -2,9 +2,18 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <artifactId>jply</artifactId>
+        <groupId>org.smurn</groupId>
+        <version>0.1.0</version>
+    </parent>
+    
     <groupId>org.smurn.jply</groupId>
     <artifactId>lwjgldemo</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
+    <packaging>jar</packaging>
+    
     <name>LWJGLDemo</name>
     <url>http://jply.smurn.org/lwjgldemo/</url>
     <description>
@@ -12,23 +21,17 @@
         with LWJGL.
     </description>
     
-    <parent>
-        <artifactId>jply</artifactId>
-        <groupId>org.smurn</groupId>
-        <version>0.1-SNAPSHOT</version>
-    </parent>
-    
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
             <url>/LICENSE.txt</url>
         </license>
     </licenses>
-    <!--<scm>
+    <scm>
         <connection>scm:git:git@github.com:smurn/jply.git</connection>
         <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
         <url>https://github.com/smurn/jply/tree/master</url>
-    </scm>-->
+    </scm>
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/smurn/jply/issues</url>

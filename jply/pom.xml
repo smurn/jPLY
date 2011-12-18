@@ -2,21 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    
+    <parent>
+        <groupId>org.smurn</groupId>
+        <artifactId>jply</artifactId>
+        <version>0.1.0</version>
+    </parent>
+    
     <groupId>org.smurn.jply</groupId>
     <artifactId>jply</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
 
     <name>jPLY</name>
     <url>http://jply.smurn.org/jply/</url>
     <description>Java library to read files in the PLY format.</description>
-	
-    <parent>
-        <groupId>org.smurn</groupId>
-        <artifactId>jply</artifactId>
-        <version>0.1-SNAPSHOT</version>
-    </parent>
     
     <licenses>
         <license>
@@ -24,11 +24,11 @@
             <url>/LICENSE.txt</url>
         </license>
     </licenses>
-    <!--<scm>
+    <scm>
         <connection>scm:git:git@github.com:smurn/jply.git</connection>
         <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
         <url>https://github.com/smurn/jply/tree/master</url>
-    </scm>-->
+    </scm>
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/smurn/jply/issues</url>

@@ -4,10 +4,10 @@
 
     <groupId>org.smurn</groupId>
     <artifactId>jply</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
 
-    <name>jPly Package</name>
+    <name>jPLY Package</name>
     <url>http://jply.smurn.org</url>
     <description>
         Java library to read files in the PLY format.
@@ -21,14 +21,9 @@
             <url>/LICENSE.txt</url>
         </license>
     </licenses>
-    <!--<scm>
+    <scm>
         <connection>scm:git:git@github.com:smurn/jply.git</connection>
         <developerConnection>scm:git:git@github.com:smurn/jply.git</developerConnection>
-        <url>https://github.com/smurn/jply/tree/master</url>
-    </scm>-->
-    <scm>
-        <connection>scm:git:scm@smurn.org:smurn/jply.git</connection>
-        <developerConnection>scm:git:git@github.com:/var/git/jPLY</developerConnection>
         <url>https://github.com/smurn/jply/tree/master</url>
     </scm>
     <issueManagement>
