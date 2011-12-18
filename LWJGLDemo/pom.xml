@@ -6,12 +6,12 @@
     <parent>
         <artifactId>jply</artifactId>
         <groupId>org.smurn</groupId>
-        <version>0.1.0</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
     
     <groupId>org.smurn.jply</groupId>
     <artifactId>lwjgldemo</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>LWJGLDemo</name>

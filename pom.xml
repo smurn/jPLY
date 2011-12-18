@@ -4,7 +4,7 @@
 
     <groupId>org.smurn</groupId>
     <artifactId>jply</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>jPLY Package</name>
