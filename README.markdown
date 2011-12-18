@@ -11,6 +11,9 @@ for all features** offered by the PLY format. jPLY is using the
 Get your bearings:
 ---------------------------------------------
 
+* [How to get it?](http://jply.smurn.org/jply/download.html) Download links and instructions for
+Maven users.
+
 * [Manual](http://jply.smurn.org/jply/manual.html) A quickstart manual on how jPLY works.
 
 * [JavaDoc](http://jply.smurn.org/jply/apidocs/index.html) jPLY is fully documented, use it!
