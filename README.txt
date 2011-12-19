@@ -11,13 +11,13 @@ for all features* offered by the PLY format. jPLY is using the
 Get your bearings:
 ---------------------------------------------
 
-* http://jply.smurn.org/jply/download.html Download links and instructions for Maven users.
+* http://jply.smurn.org/download.html Download links and instructions for Maven users.
 
-* http://jply.smurn.org/jply/manual.html  A quickstart manual on how jPLY works.
+* http://jply.smurn.org/manual.html  A quickstart manual on how jPLY works.
 
-* http://jply.smurn.org/jply/apidocs/index.html  jPLY is fully documented, use it!
+* http://jply.smurn.org/apidocs/index.html  jPLY is fully documented, use it!
 
-* http://jply.smurn.org/jply/plyformat.html A short description what (and in which structure)
+* http://jply.smurn.org/plyformat.html A short description what (and in which structure)
 might be stored in PLY files. Read this if you want to know if PLY is the
 right format for your needs. It is not a specification of the file format but
 a more high-level description.
