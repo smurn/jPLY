@@ -24,40 +24,27 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Element of a PLY file.
  * <p>Each element has a number of values that describe its properties. The
- * type of an element describes which properties are present in an element.</p>
+ * group to which an element belongs describes which properties are present in
+ * an element.</p>
  */
 public final class Element implements Cloneable {
 
     /** Values of this element. The first index selects the property. */
     private final double[][] data;
-    /** Type of this element. */
-    private final ElementType type;
+    /** Group of this element. */
+    private final ElementGroup group;
     /** Maps from property name to the index in {@code values}. */
     private final Map<String, Integer> propertyMap;
 
     /**
-     * Creates an instance.
-     * @param values Array containing an array of values for each property.
-     * @param type Element type of the element.
-     */
-    Element(final double[][] values, final ElementType type) {
-        if (values == null || type == null) {
-            throw new NullPointerException();
-        }
-        this.data = values;
-        this.type = type;
-        this.propertyMap = type.getPropertyMap();
-    }
-
-    /**
      * Creates an instance with default values.
      * <p>Properties are set to 0, list properties are set to an empty list.</p>
-     * @param type Type of the element to create.
+     * @param group Group to which this element belongs.
      */
-    public Element(final ElementType type) {
-        this.type = type;
-        this.propertyMap = type.getPropertyMap();
-        List<Property> properties = type.getProperties();
+    public Element(final ElementGroup group) {
+        this.group = group;
+        this.propertyMap = group.getPropertyMap();
+        List<Property> properties = group.getProperties();
         data = new double[properties.size()][];
         for (int i = 0; i < data.length; i++) {
             if (properties.get(i) instanceof ListProperty) {
@@ -69,11 +56,11 @@ public final class Element implements Cloneable {
     }
 
     /**
-     * Gets the type of this element.
+     * Gets the group to which this element belongs.
      * @return Element type. Is never {@code null}.
      */
-    public ElementType getType() {
-        return type;
+    public ElementGroup getGroup() {
+        return group;
     }
 
     /**
@@ -199,7 +186,7 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        if (type.getProperties().get(index) instanceof ListProperty) {
+        if (group.getProperties().get(index) instanceof ListProperty) {
             this.data[index] = values.clone();
         } else {
             if (values.length != 0) {
@@ -250,7 +237,7 @@ public final class Element implements Cloneable {
             throw new IllegalArgumentException("non existent property: '"
                     + propertyName + "'.");
         }
-        if (type.getProperties().get(index) instanceof ListProperty) {
+        if (group.getProperties().get(index) instanceof ListProperty) {
             this.data[index] = new double[values.length];
             for (int i = 0; i < values.length; i++) {
                 this.data[index][i] = values[i];
@@ -286,11 +273,11 @@ public final class Element implements Cloneable {
 
     @Override
     public Element clone() {
-        double[][] clone = new double[data.length][];
-        for (int i = 0; i < clone.length; i++) {
-            clone[i] = data[i].clone();
+        Element clone = new Element(group);
+        for(String property : propertyMap.keySet()){
+            clone.setDoubleList(property, getDoubleList(property));
         }
-        return new Element(clone, type);
+        return clone;
     }
 
     @Override
@@ -306,7 +293,7 @@ public final class Element implements Cloneable {
         }
         Element rhs = (Element) obj;
         EqualsBuilder builder = new EqualsBuilder();
-        builder.append(type, rhs.type);
+        builder.append(group, rhs.group);
         builder.append(data, rhs.data);
         return builder.isEquals();
     }
@@ -327,7 +314,7 @@ public final class Element implements Cloneable {
         if (rhs == this) {
             return true;
         }
-        if (!this.type.equals(rhs.type)) {
+        if (!this.group.equals(rhs.group)) {
             return false;
         }
         if (data.length != rhs.data.length) {
@@ -349,7 +336,7 @@ public final class Element implements Cloneable {
     @Override
     public int hashCode() {
         HashCodeBuilder builder = new HashCodeBuilder();
-        builder.append(type);
+        builder.append(group);
         builder.append(data);
         return builder.toHashCode();
     }
@@ -358,10 +345,10 @@ public final class Element implements Cloneable {
     public String toString() {
         StringBuilder str = new StringBuilder();
         str.append("Element ");
-        str.append(type.getName());
+        str.append(group.getName());
         str.append(" {");
-        for (int i = 0; i < type.getProperties().size(); i++) {
-            Property property = type.getProperties().get(i);
+        for (int i = 0; i < group.getProperties().size(); i++) {
+            Property property = group.getProperties().get(i);
             if (i > 0) {
                 str.append(" ");
             }

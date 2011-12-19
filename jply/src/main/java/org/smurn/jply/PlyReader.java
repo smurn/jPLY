@@ -19,44 +19,124 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Interface for classes reading PLY file structures.
+ * Interface for streams that provide PLY data.
+ * <h2>Why sequential and random-access methods are put into the same
+ * interface</h2>
+ * <p>It might seem natural to separate the random-access methods into separate
+ * interfaces. A {@code SeekablePlyReader} interface that extends from the
+ * sequential interface {@code PlyReader}. While this works nicely in some
+ * use-cases it causes problems for wrapper classes:</p>
+ * <ul>
+ * <li>A {@code PlyReader} wrapper might be used to wrap a
+ * {@code SeekablePlyReader}. The wrapper might assume that 
+ * {@link #readElement()} returns the elements in the order they are stored in
+ * the file. But since the seek methods can be called on the wrapped stream
+ * directly this assumption can fail. With the combined interface this cannot
+ * happen since every wrapper is aware that there exist seekable streams.</li>
+ * <li>Wrappers might work on both random-access and sequential streams.
+ * Often such wrappers can provide random-access themselves if the underlying
+ * stream offers random-access as well. Such a wrapper would need to implement
+ * either the sequential or the random-access interface depending on the
+ * underlying stream. This basically requires two separate implementations
+ * of the wrapper. With the combined interface such wrappers behave
+ * as expected.</li>
+ * </ul>
  */
 public interface PlyReader {
 
     /**
-     * Gets all element types in this PLY file.
-     * <p>The order of the list
-     * is the same in which the corresponding readers are returned
-     * by {@link #nextElementReader()}.</p>
-     * @return Immutable list with all element types.
+     * Gets all element groups in this PLY file.
+     * @return Immutable list of element groups in the same order as they will
+     * be returned by {@link #getNextElementGroup()}.
      */
-    List<ElementType> getElementTypes();
+    List<ElementGroup> getElementGroups();
 
     /**
-     * Gets the number of elements for a given element type.
-     * @param elementType Name of the element type.
-     * @return Number of elements of the given type.
-     * @throws NullPointerException if {@code elementType} is {@code null}.
-     * @throws IllegalArgumentException if there is no such type in this
-     * file.
+     * Positions the stream at the first element of the next group.
+     * <p>Each group has a different name.</p>
+     * @return The group to which the element belongs that will be read
+     * next or {@code null} if the end of the stream has been reached.
+     * @throws IOException if reading fails.
      */
-    int getElementCount(final String elementType);
+    ElementGroup readElementGroup() throws IOException;
 
     /**
-     * Returns the reader to read the first group of elements.
-     * <p>Each group corresponds to an element type. The groups are
-     * returned in the order given in the file. This is also the
-     * same order as in the list given by {@link #getElementTypes()}.</p>
-     * <p>Each returned reader must be closed before the next reader
-     * is requested with this method.</p>
-     * @return Reader for the next group of elements or {@code null} if
-     * there are no more groups.
-     * @throws IOException if an error occurs during reading.
+     * Reads the next element of the current group.
+     * <p>This methods reads only the elements of the current group.
+     * If there are no more elements {@code null} is returned. At this point
+     * {@link #readElementGroup()} needs to be called to continue reading.
+     * After that this method will start reading the elements of the next
+     * group.</p>
+     * @return The next element of the current group or {@code null} if
+     * there are no more elements in the current group.
+     * @throws IOException  if reading fails.
      */
-    ElementReader nextElementReader() throws IOException;
+    Element readElement() throws IOException;
 
     /**
-     * Closes the file.
+     * Checks if this stream supports random-access.
+     * @return {@code true} if the steam supports random-access. {@code false}
+     * if only sequential access is supported.
+     */
+    boolean isSeakable();
+
+    /**
+     * Positions the stream at the first element of the given group.
+     * @param groupName Group at which to position the stream.
+     * @throws NoSuchElementException if there is no such group in
+     * this stream.
+     * @throws NullPointerException if {@code group} is {@code null}.
+     * @throws UnsupportedOperationException if this stream does not
+     * support random-access. See {@link #isSeakable()}.
+     */
+    void seekElementGroup(String groupName) throws IOException;
+
+    /**
+     * Positions the stream such that the element with the given index
+     * will be read next.
+     * @param Index of the next element to read.
+     * @throws IndexOutOfBoundsException if {@code index} is negative or
+     * greater-equal than the number of elements in the current group.
+     * @throws IOException if reading fails.
+     * @throws UnsupportedOperationException if this stream does not
+     * support random-access. See {@link #isSeakable()}.
+     */
+    void seekElement(int index) throws IOException;
+
+    /**
+     * Returns the element at the given index.
+     * <p>The next element that will be returned by {@link #readElement()} is
+     * not affected.</p>
+     * @param index Index of the requested element.
+     * @return Element with the given index.
+     * @throws IndexOutOfBoundsException if {@code index} is negative or
+     * greater-equal than the number of elements in the current group.
+     * @throws IOException if reading fails.
+     * @throws UnsupportedOperationException if this stream does not
+     * support random-access. See {@link #isSeakable()}.
+     */
+    Element getElement(int index) throws IOException;
+
+    /**
+     * Returns the element at the given index.
+     * <p>The next element that will be returned by {@link #readElement()} is
+     * not affected.</p>
+     * @param groupName Group of the requested element.
+     * @param index Index of the requested element.
+     * @return Element with the given index.
+     * @throws IndexOutOfBoundsException if {@code index} is negative or
+     * greater-equal than the number of elements in the current group.
+     * @throws NoSuchElementException if there is no such group in
+     * this stream.
+     * @throws NullPointerException if {@code group} is {@code null}.
+     * @throws IOException if reading fails.
+     * @throws UnsupportedOperationException if this stream does not
+     * support random-access. See {@link #isSeakable()}.
+     */
+    Element getElement(String groupName, int index) throws IOException;
+
+    /**
+     * Closes the stream.
      * @throws IOException if closing fails. 
      */
     void close() throws IOException;
