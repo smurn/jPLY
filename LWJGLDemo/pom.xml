@@ -5,7 +5,7 @@
     
     <groupId>org.smurn.jply</groupId>
     <artifactId>lwjgldemo</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
     
     <name>LWJGLDemo</name>
@@ -131,7 +131,7 @@
         <dependency>
             <groupId>org.smurn</groupId>
             <artifactId>jply</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
