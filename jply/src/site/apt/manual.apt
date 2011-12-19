@@ -86,6 +86,6 @@ converts them to whatever you need.
 
   That's it! You find find all the details you need in the
 {{{./apidocs/index.html}JavaDoc}}. There are also two demo applications, a 
-{{{../consoledemo/index.html}simple one}} dumping some data from the file to 
+{{{./consoledemo/index.html}simple one}} dumping some data from the file to 
 the console, and another one 
-{{{../lwjgldemo/index.html} rendering PLY models using LWJGL}}.
+{{{./lwjgldemo/index.html} rendering PLY models using LWJGL}}.

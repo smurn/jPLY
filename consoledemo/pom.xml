@@ -3,12 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     
-    <parent>
-        <artifactId>jply</artifactId>
-        <groupId>org.smurn</groupId>
-        <version>0.1.1-SNAPSHOT</version>
-    </parent>
-    
     <groupId>org.smurn.jply</groupId>
     <artifactId>consoledemo</artifactId>
     <version>0.1.1-SNAPSHOT</version>
@@ -61,7 +55,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-ssh</artifactId>
+                        <artifactId>wagon-ssh-external</artifactId>
                         <version>2.1</version>
                     </dependency>
                 </dependencies>
@@ -97,10 +91,17 @@
             </plugin>
         </plugins>
     </build>
-   
+    
+    <distributionManagement>
+        <site>
+            <id>smurn</id>
+            <url>scpexe://smurn.org/var/www/jply.smurn.org/consoledemo/</url>
+        </site>
+    </distributionManagement>
+    
     <dependencies>
         <dependency>
-            <groupId>org.smurn.jply</groupId>
+            <groupId>org.smurn</groupId>
             <artifactId>jply</artifactId>
             <version>0.1.1-SNAPSHOT</version>
         </dependency>

@@ -25,9 +25,8 @@ under the License.
   <body>
     <menu name="jPLY Console Demo">
         <item name="Introduction" href="index.html"/>
-        <item name="jPLY Library" href="../jply/index.html"/>
+        <item name="jPLY Library" href="../index.html"/>
     </menu>
-    <menu ref="parent" />
     <menu ref="reports" />
   </body>
 </project>

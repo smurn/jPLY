@@ -30,10 +30,9 @@ under the License.
         <item name="Manual" href="manual.html"/>
         <item name="PLY File Format" href="plyformat.html"/>
         <item name="JavaDoc" href="apidocs/index.html"/>
-        <item name="Console Demo" href="../consoledemo/index.html"/>
-        <item name="LWJGL (OpenGL) Demo" href="../lwjgldemo/index.html"/>
+        <item name="Console Demo" href="consoledemo/index.html"/>
+        <item name="LWJGL (OpenGL) Demo" href="lwjgldemo/index.html"/>
     </menu>
-    <menu ref="parent" />
     <menu ref="reports" />
   </body>
 </project>

@@ -1,6 +1,6 @@
 jPLY Console Demo Application
 
-  This is a small demo application of the {{{../jply/index.html}jPLY}} library
+  This is a small demo application of the {{{../index.html}jPLY}} library
 to read files in the PLY format.
 
   This application does nothing but opening a PLY file and dumping the 

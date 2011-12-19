@@ -18,10 +18,10 @@ might be stored in PLY files. Read this if you want to know if PLY is the
 right format for your needs. It is not a specification of the file format but
 a more high-level description.
 
-  * {{{../consoledemo/index.html}Console Demo}} a very small demo application
+  * {{{./consoledemo/index.html}Console Demo}} a very small demo application
 reading a PLY file and dumping some of the information in it to the console.
 
-  * {{{../lwjgldemo/index.html}LWJGL Demo}} a OpenGL demo showing how to
+  * {{{./lwjgldemo/index.html}LWJGL Demo}} a OpenGL demo showing how to
 use jPLY to render a PLY model.
 
   * Something unclear? Just {{{https://github.com/smurn/jPly/issues}open a ticket}}.
