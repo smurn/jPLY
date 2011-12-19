@@ -100,9 +100,9 @@
    
     <dependencies>
         <dependency>
-            <groupId>org.smurn</groupId>
+            <groupId>org.smurn.jply</groupId>
             <artifactId>jply</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
