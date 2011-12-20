@@ -2,7 +2,7 @@ How to get jPLY?
 
 * For Maven Users
 
-jPLY is available in the central maven repository. Just add the following
+  jPLY is available in the central maven repository. Just add the following
 dependency to your <<<pom.xml>>>:
 
 -----
