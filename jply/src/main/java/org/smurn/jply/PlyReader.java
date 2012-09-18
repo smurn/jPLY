@@ -15,13 +15,14 @@
  */
 package org.smurn.jply;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
 /**
  * Interface for classes reading PLY file structures.
  */
-public interface PlyReader {
+public interface PlyReader extends Closeable{
 
     /**
      * Gets all element types in this PLY file.

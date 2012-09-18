@@ -15,12 +15,13 @@
  */
 package org.smurn.jply;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 /**
  * Reads a stream of elements.
  */
-public interface ElementReader {
+public interface ElementReader extends Closeable{
 
     /**
      * The element type of all elements read by this stream.
