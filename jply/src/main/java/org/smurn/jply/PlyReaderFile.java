@@ -15,21 +15,11 @@
  */
 package org.smurn.jply;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PushbackInputStream;
+import java.io.*;
 import java.nio.ByteOrder;
 import java.nio.channels.Channels;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -53,6 +43,8 @@ public final class PlyReaderFile implements PlyReader {
     private int nextElement = 0;
     /** Reader last returned. */
     private ElementReader currentReader;
+    /** Raw header lines */
+    private List<String> rawHeaders;
 
     /**
      * Opens a PLY file.
@@ -119,6 +111,7 @@ public final class PlyReaderFile implements PlyReader {
         List<Property> currentElementProperties = null;
         elements = new ArrayList<ElementType>();
         elementCounts = new HashMap<String, Integer>();
+        rawHeaders = new ArrayList<String>();
 
         for (String line = hdrReader.readLine(); true;
                 line = hdrReader.readLine()) {
@@ -130,6 +123,7 @@ public final class PlyReaderFile implements PlyReader {
             if (line.isEmpty()) {
                 continue;
             }
+            rawHeaders.add(line);
             if (line.startsWith("format ")) {
                 if (format != null) {
                     throw new IOException("Multiple format definitions.");
@@ -157,8 +151,6 @@ public final class PlyReaderFile implements PlyReader {
                 currentElementProperties.add(property);
             } else if (line.startsWith("end_header")) {
                 break;
-            } else if (!line.startsWith("comment ")) {
-                throw new IOException("Unsupported header entry: " + line);
             }
         }
 
@@ -206,7 +198,6 @@ public final class PlyReaderFile implements PlyReader {
      * by {@link #nextElementReader()}.</p>
      * @return Immutable list with all element types.
      */
-    @Override
     public List<ElementType> getElementTypes() {
         return elements;
     }
@@ -219,7 +210,6 @@ public final class PlyReaderFile implements PlyReader {
      * @throws IllegalArgumentException if there is no such type in this
      * file.
      */
-    @Override
     public int getElementCount(final String elementType) {
         if (elementType == null) {
             throw new IllegalArgumentException("elementType must not be null.");
@@ -244,7 +234,6 @@ public final class PlyReaderFile implements PlyReader {
      * there are no more groups.
      * @throws IOException if an error occurs during reading.
      */
-    @Override
     public ElementReader nextElementReader() throws IOException {
         if (currentReader != null && !currentReader.isClosed()) {
             throw new IllegalStateException(
@@ -255,10 +244,19 @@ public final class PlyReaderFile implements PlyReader {
     }
 
     /**
+     * Returns all the raw lines in the ply header, including
+     * lines that are not supported by this library.
+     *
+     * @return The list of header lines
+     */
+    public List<String> getRawHeaders() {
+        return rawHeaders;
+    }
+
+    /**
      * Closes the file.
      * @throws IOException if closing fails. 
      */
-    @Override
     public void close() throws IOException {
         if (currentReader != null) {
             currentReader.close();

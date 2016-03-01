@@ -329,7 +329,6 @@ public class NormalizingPlyReader implements PlyReader {
      * by {@link #nextElementReader()}.</p>
      * @return Immutable list with all element types.
      */
-    @Override
     public List<ElementType> getElementTypes() {
         return elementTypes;
     }
@@ -342,7 +341,6 @@ public class NormalizingPlyReader implements PlyReader {
      * @throws IllegalArgumentException if there is no such type in this
      * file.
      */
-    @Override
     public int getElementCount(final String elementType) {
         return plyReader.getElementCount(elementType);
     }
@@ -358,7 +356,6 @@ public class NormalizingPlyReader implements PlyReader {
      * there are no more groups.
      * @throws IOException if an error occurs during reading.
      */
-    @Override
     public ElementReader nextElementReader() throws IOException {
         RandomElementReader reader = plyReader.nextElementReader();
         if (reader == null) {
@@ -403,11 +400,14 @@ public class NormalizingPlyReader implements PlyReader {
         return reader;
     }
 
+    public List<String> getRawHeaders() {
+        return plyReader.getRawHeaders();
+    }
+
     /**
      * Closes the file.
      * @throws IOException if closing fails. 
      */
-    @Override
     public void close() throws IOException {
         plyReader.close();
     }

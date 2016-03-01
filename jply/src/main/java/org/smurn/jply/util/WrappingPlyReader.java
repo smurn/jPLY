@@ -132,7 +132,6 @@ class WrappingPlyReader implements PlyReader {
         this.elementTypes = Collections.unmodifiableList(types);
     }
 
-    @Override
     public List<ElementType> getElementTypes() {
         return elementTypes;
     }
@@ -147,13 +146,11 @@ class WrappingPlyReader implements PlyReader {
      * @return Number of elements of the given type.
      * @throws UnsupportedOperationException IS ALWAYS THROWN.
      */
-    @Override
     public int getElementCount(final String elementType) {
         throw new UnsupportedOperationException(
                 "Wrappers might change the element count.");
     }
 
-    @Override
     public ElementReader nextElementReader() throws IOException {
         ElementReader unwrapped = reader.nextElementReader();
         if (unwrapped == null) {
@@ -168,7 +165,10 @@ class WrappingPlyReader implements PlyReader {
         }
     }
 
-    @Override
+    public List<String> getRawHeaders() {
+        return reader.getRawHeaders();
+    }
+
     public void close() throws IOException {
         reader.close();
     }
