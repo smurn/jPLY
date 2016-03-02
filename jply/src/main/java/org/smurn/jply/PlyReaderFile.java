@@ -53,6 +53,8 @@ public final class PlyReaderFile implements PlyReader {
     private int nextElement = 0;
     /** Reader last returned. */
     private ElementReader currentReader;
+    /** Raw header lines */
+    private List<String> rawHeaders;
 
     /**
      * Opens a PLY file.
@@ -119,6 +121,7 @@ public final class PlyReaderFile implements PlyReader {
         List<Property> currentElementProperties = null;
         elements = new ArrayList<ElementType>();
         elementCounts = new HashMap<String, Integer>();
+        rawHeaders = new ArrayList<String>();
 
         for (String line = hdrReader.readLine(); true;
                 line = hdrReader.readLine()) {
@@ -130,6 +133,7 @@ public final class PlyReaderFile implements PlyReader {
             if (line.isEmpty()) {
                 continue;
             }
+            rawHeaders.add(line);
             if (line.startsWith("format ")) {
                 if (format != null) {
                     throw new IOException("Multiple format definitions.");
@@ -157,8 +161,6 @@ public final class PlyReaderFile implements PlyReader {
                 currentElementProperties.add(property);
             } else if (line.startsWith("end_header")) {
                 break;
-            } else if (!line.startsWith("comment ")) {
-                throw new IOException("Unsupported header entry: " + line);
             }
         }
 
@@ -252,6 +254,17 @@ public final class PlyReaderFile implements PlyReader {
         }
         currentReader = nextElementReaderInternal();
         return currentReader;
+    }
+
+    /**
+     * Returns all the raw lines in the ply header, including
+     * lines that are not supported by this library.
+     *
+     * @return The list of header lines
+     */
+    @Override
+    public List<String> getRawHeaders() {
+        return rawHeaders;
     }
 
     /**

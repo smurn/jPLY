@@ -106,6 +106,11 @@ class RandomPlyReader implements PlyReader {
     }
 
     @Override
+    public List<String> getRawHeaders() {
+        return reader.getRawHeaders();
+    }
+
+    @Override
     public void close() throws IOException {
         closed = true;
         reader.close();

@@ -57,6 +57,14 @@ public interface PlyReader extends Closeable{
     ElementReader nextElementReader() throws IOException;
 
     /**
+     * Returns all the raw lines in the ply header, including
+     * lines that are not supported by this library.
+     *
+     * @return The list of header lines
+     */
+    List<String> getRawHeaders();
+
+    /**
      * Closes the file.
      * @throws IOException if closing fails. 
      */

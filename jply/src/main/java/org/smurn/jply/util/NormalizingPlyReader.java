@@ -403,6 +403,11 @@ public class NormalizingPlyReader implements PlyReader {
         return reader;
     }
 
+    @Override
+    public List<String> getRawHeaders() {
+        return plyReader.getRawHeaders();
+    }
+
     /**
      * Closes the file.
      * @throws IOException if closing fails. 

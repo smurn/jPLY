@@ -169,6 +169,11 @@ class WrappingPlyReader implements PlyReader {
     }
 
     @Override
+    public List<String> getRawHeaders() {
+        return reader.getRawHeaders();
+    }
+
+    @Override
     public void close() throws IOException {
         reader.close();
     }
