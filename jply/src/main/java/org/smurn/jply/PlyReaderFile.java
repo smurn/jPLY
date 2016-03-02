@@ -15,11 +15,21 @@
  */
 package org.smurn.jply;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PushbackInputStream;
 import java.nio.ByteOrder;
 import java.nio.channels.Channels;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -198,6 +208,7 @@ public final class PlyReaderFile implements PlyReader {
      * by {@link #nextElementReader()}.</p>
      * @return Immutable list with all element types.
      */
+    @Override
     public List<ElementType> getElementTypes() {
         return elements;
     }
@@ -210,6 +221,7 @@ public final class PlyReaderFile implements PlyReader {
      * @throws IllegalArgumentException if there is no such type in this
      * file.
      */
+    @Override
     public int getElementCount(final String elementType) {
         if (elementType == null) {
             throw new IllegalArgumentException("elementType must not be null.");
@@ -234,6 +246,7 @@ public final class PlyReaderFile implements PlyReader {
      * there are no more groups.
      * @throws IOException if an error occurs during reading.
      */
+    @Override
     public ElementReader nextElementReader() throws IOException {
         if (currentReader != null && !currentReader.isClosed()) {
             throw new IllegalStateException(
@@ -249,6 +262,7 @@ public final class PlyReaderFile implements PlyReader {
      *
      * @return The list of header lines
      */
+    @Override
     public List<String> getRawHeaders() {
         return rawHeaders;
     }
@@ -257,6 +271,7 @@ public final class PlyReaderFile implements PlyReader {
      * Closes the file.
      * @throws IOException if closing fails. 
      */
+    @Override
     public void close() throws IOException {
         if (currentReader != null) {
             currentReader.close();

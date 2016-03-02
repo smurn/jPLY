@@ -49,10 +49,12 @@ class RandomPlyReader implements PlyReader {
         }
     }
 
+    @Override
     public List<ElementType> getElementTypes() {
         return reader.getElementTypes();
     }
 
+    @Override
     public int getElementCount(final String elementType) {
         try {
             return getElementReader(elementType).getCount();
@@ -91,6 +93,7 @@ class RandomPlyReader implements PlyReader {
         return buffer.get(elementType).duplicate();
     }
 
+    @Override
     public RandomElementReader nextElementReader() throws IOException {
         if (closed) {
             throw new IllegalStateException("Reader is closed.");
@@ -102,10 +105,12 @@ class RandomPlyReader implements PlyReader {
         return getElementReader(type);
     }
 
+    @Override
     public List<String> getRawHeaders() {
         return reader.getRawHeaders();
     }
 
+    @Override
     public void close() throws IOException {
         closed = true;
         reader.close();
