@@ -30,7 +30,7 @@ public class PlyWriter {
             for (ELement p : elements) { //only for vertices for now
                 out.write(convertFloatToByteArray((float) p.getDouble("x")));
                 out.write(convertFloatToByteArray((float) p.getDouble("y")));
-                out.write(convertFloatToByteArray((float) p.getDouble("z"));
+                out.write(convertFloatToByteArray((float) p.getDouble("z")));
 
             }
 
