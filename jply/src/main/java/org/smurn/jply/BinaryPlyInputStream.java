@@ -84,7 +84,7 @@ class BinaryPlyInputStream {
                 return buffer.getInt();
             case UINT:
                 ensureAvailable(4);
-                return ( (long) buffer.getShort() ) & 0x00000000FFFFFFFF;
+                return ( (long) buffer.getInt() ) & 0x00000000FFFFFFFF;
             case FLOAT:
                 ensureAvailable(4);
                 return buffer.getFloat();
